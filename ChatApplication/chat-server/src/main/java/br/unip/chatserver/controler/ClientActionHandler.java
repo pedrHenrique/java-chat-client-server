@@ -40,10 +40,17 @@ public final class ClientActionHandler extends ClientActions {
 		} else if ("msg".equalsIgnoreCase(comando)) {
 			//String[] tokensMsg = StringUtils.split(line, null, 3);
 			//handleMessage(tokensMsg);
+			notificaClientViaOutput(client, "Feature ainda não disponível.\n");
 		} else if ("join".equalsIgnoreCase(comando)) {
 			//handleJoin(tokens);
+			notificaClientViaOutput(client, "Feature ainda não disponível.\n");
 		} else if ("leave".equalsIgnoreCase(comando)) {
 			//handleLeave(tokens);
+			notificaClientViaOutput(client, "Feature ainda não disponível.\n");
+		} else if ("user".equalsIgnoreCase(comando)){
+			notificaClientViaOutput(client, "Eu sou o usuário(a): " + client.getUser().getLogin() + "\n");
+		} else if ("userlist".equalsIgnoreCase(comando)) {
+			exibeUsuariosOnlineParaCliente(client);
 		} else {
 			notificaClientViaOutput(client, "Comando " + comando + " não pode ser reconhecido.\n");
 		}

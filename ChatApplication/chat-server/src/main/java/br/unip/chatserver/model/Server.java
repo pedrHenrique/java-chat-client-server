@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 
 public class Server {
 
-	private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
+	//private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
 
 	private final Integer serverPort;
 
@@ -25,7 +25,7 @@ public class Server {
 	public void run() {
 		iniciaServerSocket(serverPort);
 		while (serverSocket.isBound()) {
-			LOGGER.info("Pronto para receber conexões...");
+			System.out.println("Pronto para receber conexões...");
 			aceitaConexaoCliente();
 		}
 	}
@@ -33,10 +33,10 @@ public class Server {
 	private void aceitaConexaoCliente() {
 		try {
 			Socket clientSocket = serverSocket.accept();
-			LOGGER.info("Conexão aceita do soquete: " + clientSocket);
+			System.out.println("Conexão aceita do soquete: " + clientSocket);
 			this.administraCliente(clientSocket);
 		} catch (IOException exception) {
-			LOGGER.error("Server Error. O Servidor não pôde aceitar uma conexão!\nMotivo: " + exception.getMessage(), exception);
+			System.err.print("Server Error. O Servidor não pôde aceitar uma conexão!\nMotivo: " + exception.getMessage());
 		}
 	}
 
@@ -50,14 +50,13 @@ public class Server {
 		if (serverSocket == null) {
 			try {
 				serverSocket = new ServerSocket(serverPort);
-				LOGGER.info("Servidor Chat Iniciado!");
+				System.out.println("Servidor Chat Iniciado!");
 				return;
 			} catch (IOException e) {
-				throw new IllegalArgumentException(
-						"Server Error. Não foi possível inicializar o servidor!\nMotivo: " + e.getMessage());
+				throw new IllegalArgumentException("Server Error. Não foi possível inicializar o servidor!\nMotivo: " + e.getMessage());
 			}
 		}
-		LOGGER.info("Apenas uma instância do servidor pode estar rodando.");
+		System.out.println("Apenas uma instância do servidor pode estar rodando.");
 	}
 
 	private static void finalizaSocketServer() {
@@ -66,10 +65,9 @@ public class Server {
 				serverSocket.close();
 			} catch (IOException e) {
 				e.printStackTrace();
-				LOGGER.error("Não foi possível fechar a conexão do servidor\n");
+				System.err.print("Não foi possível fechar a conexão do servidor\n");
 			}
 		}
-
 	}
 
 	public static List<ClientConnection> getClientList() {
@@ -81,6 +79,7 @@ public class Server {
 	}
 
 	public static void notificaNoConsoleDoServidor(String mensagem) {
-		LOGGER.info(mensagem);
+		//LOGGER.info(mensagem);
+		System.out.println(mensagem);
 	}
 }

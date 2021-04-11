@@ -1,14 +1,13 @@
 package br.unip.chatserver.model;
 
 import java.io.IOException;
-import java.util.List;
 
-public class ClientActions {	
-	
+public class ClientActions extends ClientNotificationActions {
+
 	protected ClientActions() {
-		
+
 	}
-	
+
 //	public void handleLeave(String[] tokens) {
 //		if (tokens.length > 1) {
 //			String topic = tokens[1];
@@ -53,109 +52,69 @@ public class ClientActions {
 //
 	protected static void handleLogoff(ClientConnection client) {
 		if (isUserLogado(client)) {
-			notificaUsuarios(client, client.getUser().getLogin() + " ficou offline.");
+			notificaTodosOsUsuarios(client, client.getUser().getLogin() + " ficou offline.\n");
 		}
 		Server.removeClientConnection(client);
 		finalizaClientSocket(client);
 	}
-	
+
 	public static void finalizaClientSocket(ClientConnection client) {
 		try {
 			client.getClientSocket().close();
 		} catch (IOException e) {
-			System.err.println("Não foi possível fechar o soquete " + client.getClientSocket() + ".\nMotivo: " + e.getStackTrace());
-		}
-	}
-	
-	/**
-	 * Notifica todos os clientes que estejam com algum usuário logado, alguma mensagem.<p>
-	 * Não notifica o <b>remetente</b> da mensagem.
-	 *
-	 * @param remetente - O remetente da mensagem.
-	 * @param mensagem - A mensagem.
-	 */
-	private static void notificaUsuarios(ClientConnection remetente, String mensagem) {
-		for (ClientConnection client : Server.getClientList()) {
-			if (!remetente.getUser().equals(client.getUser()) && isUserLogado(client)) {
-				send(client, mensagem);
-			}
-		}
-	}
-
-	/**
-	 * Notifica para o client informado, todos os outros usuários que estão online.
-	 *
-	 * @param client - O cliente que irá receber a lista de usuários online.
-	 */
-	private void exibeUsuariosOnlineParaUsuarioEspecifico(ClientConnection client) {
-		for (ClientConnection cl : Server.getClientList()) {
-			if (isUserLogado(cl) && !client.getUser().equals(cl.getUser())) {
-				send(client, "Online " + cl.getUser().getLogin()+ "\n");
-			}
+			System.err.println("Não foi possível fechar o soquete " + client.getClientSocket() + ".\nMotivo: "
+					+ e.getStackTrace());
 		}
 	}
 
 	protected void handleLogin(ClientConnection client, String[] tokens) {
-		Usuario usuario = this.validaLoginToken(client, tokens);
-		//TODO validar se o usuário passado está sendo validado corretamente e se existe no banco
-		if (usuario != null && loginbiarra(usuario)) { // Exemplo se a validação ter sido feita com sucesso.
-			client.setUser(usuario);
-			Server.notificaNoConsoleDoServidor("Login do usuário: " + usuario.toString());
-			exibeUsuariosOnlineParaUsuarioEspecifico(client);
-			notificaUsuarios(client, "Online " + usuario.getLogin());
-		} else {			
-			Server.notificaNoConsoleDoServidor("Cliente: " + client + " teve uma tentativa de login falha!");
-			notificaClientViaOutput(client, "Usuário ou senha informados não estão corretos.");
+		boolean isTokenValidado = this.validaTokenLogin(client, tokens);
+		if (isTokenValidado) {
+			String login = tokens[1];
+			String senha = tokens[2];
+			Usuario usuario = new Usuario(null, login, senha);
+			if (usuarioValido(usuario)) {
+				client.setUser(usuario);
+				notificaClientViaOutput(client, "Login realizado com sucesso!\n");
+				exibeUsuariosOnlineParaCliente(client);
+				notificaTodosOsUsuarios(client, client.getUser().getLogin() + " ficou online.\n");
+				Server.notificaNoConsoleDoServidor("Login do usuário: " + usuario.toString());
+			} else {
+				Server.notificaNoConsoleDoServidor("Cliente: " + client.getClientSocket() + " teve uma tentativa de login falha!");
+				notificaClientViaOutput(client, "Usuário ou senha informados não correspondem!\n");
+			}
 		}
 	}
 
-	private Usuario validaLoginToken(ClientConnection client, String[] tokens) {
-		String login;
-		String password;
-		try {
-			login = tokens[1];
-			password = tokens[2];
-			return new Usuario(null, login, password);
-		} catch (Exception e) {
-			notificaClientViaOutput(client, "Ops. O login ou a senha não foi foram informados corretamente. Tente novamente!\n");
-			return null;
+	private boolean validaTokenLogin(ClientConnection client, String[] tokens) {
+		// validando se o login e a senha foram informados corretamente
+		if (tokens.length != 3) {
+			notificaClientViaOutput(client, "Por favor, informe um usuário e uma senha.\n");
+			return false;
 		}
+		for (int i = 0; i < tokens.length; i++) {
+			if (tokens[i].isBlank() || tokens[i].isEmpty()) {
+				notificaClientViaOutput(client,
+						"Ops, a forma como a senha ou o login foram informados não pode ser aceita.\n");
+				return false;
+			}
+		}
+		return true;
 	}
 
-	private boolean loginbiarra(Usuario usuario) {
-		return 	(usuario.getLogin().equals("Felipe") && usuario.getPassword().equals("Felipe"))
-				|| (usuario.getLogin().equalsIgnoreCase("Erick") && usuario.getPassword().equalsIgnoreCase("Eric")
+	// TODO validar se o usuário passado está sendo validado corretamente e se existe no banco
+	// Esta validação é apenas para teste
+	private boolean usuarioValido(Usuario usuario) {
+		return (usuario.getLogin().equals("Felipe") && usuario.getPassword().equals("Felipe"))
+				|| (usuario.getLogin().equalsIgnoreCase("Erick") 	&& usuario.getPassword().equalsIgnoreCase("Erick")
 				|| (usuario.getLogin().equalsIgnoreCase("Fernando") && usuario.getPassword().equalsIgnoreCase("Fernando"))
-				|| (usuario.getLogin().equalsIgnoreCase("Karina") && usuario.getPassword().equalsIgnoreCase("Karina"))
-				|| (usuario.getLogin().equalsIgnoreCase("Pedro") && usuario.getPassword().equalsIgnoreCase("Pedro"))
-				|| (usuario.getLogin().equalsIgnoreCase("Gustavo") && usuario.getPassword().equalsIgnoreCase("Gustavo")));
-	}
-
-	// TODO precisa ser olhado a fundo!!
-	private static void send(ClientConnection client, String msg) {
-		if (isUserLogado(client)) {
-			try {
-				notificaClientViaOutput(client, msg);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-			notificaClientViaOutput(client, "Você precisa estar logado para enviar alguma mensagem!");
-		}
-	}
-
-	protected static void notificaClientViaOutput(ClientConnection client, String mensagem) {
-		try {
-			if (client.getOutputStream() == null) {
-				client.setOutputStream(client.getOutputStream());
-			}
-			client.getOutputStream().write(mensagem.getBytes());
-		} catch (Exception e) {
-			System.err.print("Não foi possível notificar pelo output o client " + client.getOutputStream() + ".\nMotivo: "
-					+ e.getStackTrace());
-		}
-	}
+				|| (usuario.getLogin().equalsIgnoreCase("Karina")	&& usuario.getPassword().equalsIgnoreCase("Karina"))
+				|| (usuario.getLogin().equalsIgnoreCase("Pedro")	&& usuario.getPassword().equalsIgnoreCase("Pedro"))
+				|| (usuario.getLogin().equalsIgnoreCase("Gustavo")	&& usuario.getPassword().equalsIgnoreCase("Gustavo")));
+	}	
 	
-	private static boolean isUserLogado(ClientConnection client) {
+	protected static boolean isUserLogado(ClientConnection client) {
 		return client.getUser() != null;
 	}
+	
 }

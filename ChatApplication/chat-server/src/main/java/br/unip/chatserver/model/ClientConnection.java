@@ -1,7 +1,5 @@
 package br.unip.chatserver.model;
 
-import org.apache.commons.lang3.StringUtils;
-
 import br.unip.chatserver.controler.ClientActionHandler;
 
 import java.io.*;
@@ -23,7 +21,8 @@ public class ClientConnection extends Thread {
 
 	public ClientConnection(Socket clientSocket) {
 		this.clientSocket = clientSocket;
-	}
+		this.outputStream = this.iniciaClientOuputStream();
+	}	
 
 	@Override
 	public void run() {
@@ -78,13 +77,19 @@ public class ClientConnection extends Thread {
 	public OutputStream getOutputStream() {
 		return outputStream;
 	}
-
-	public void setOutputStream(OutputStream outputStream) {
-		this.outputStream = outputStream;
-	}
 	
 	public Socket getClientSocket() {
 		return clientSocket;
 	}
 
+	private OutputStream iniciaClientOuputStream() {
+		try {
+			return clientSocket.getOutputStream();
+		} catch (IOException e) {
+			System.err.print("Não foi possível iniciar o outputStream dp " + this + ".\nMotivo: "
+					+ e.getStackTrace());
+		}
+		return outputStream;
+	}
+	
 }
