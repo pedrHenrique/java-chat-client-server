@@ -1,6 +1,7 @@
 package br.unip.chatserver.model;
 
 import java.io.IOException;
+import java.util.List;
 
 public class ClientActions extends ClientNotificationActions {
 
@@ -25,9 +26,10 @@ public class ClientActions extends ClientNotificationActions {
 //			topicSet.add(topic);
 //		}
 //	}
-//
-//	// format: "msg" "login" body...
-//	// format: "msg" "#topic" body...
+
+	
+	// format: "msg" "login" body...
+	// format: "msg" "#topic" body...
 //	private void handleMessage(String[] tokens) throws IOException {
 //		String sendTo = tokens[1];
 //		String body = tokens[2];
@@ -49,7 +51,7 @@ public class ClientActions extends ClientNotificationActions {
 //			}
 //		}
 //	}
-//
+
 	protected static void handleLogoff(ClientConnection client) {
 		if (isUserLogado(client)) {
 			notificaTodosOsUsuarios(client, client.getUser().getLogin() + " ficou offline.\n");
@@ -69,6 +71,7 @@ public class ClientActions extends ClientNotificationActions {
 
 	protected void handleLogin(ClientConnection client, String[] tokens) {
 		boolean isTokenValidado = this.validaTokenLogin(client, tokens);
+		// TODO -> Validar Usuário com Banco.
 		if (isTokenValidado) {
 			String login = tokens[1];
 			String senha = tokens[2];
@@ -93,9 +96,8 @@ public class ClientActions extends ClientNotificationActions {
 			return false;
 		}
 		for (int i = 0; i < tokens.length; i++) {
-			if (tokens[i].isBlank() || tokens[i].isEmpty()) {
-				notificaClientViaOutput(client,
-						"Ops, a forma como a senha ou o login foram informados não pode ser aceita.\n");
+			if (tokens[i].isEmpty()) {
+				notificaClientViaOutput(client,"Ops, a forma como a senha ou o login foram informados não pode ser aceita.\n");
 				return false;
 			}
 		}

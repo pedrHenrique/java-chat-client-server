@@ -16,7 +16,7 @@ public class Server {
 
 	private static ServerSocket serverSocket;
 
-	private static ArrayList<ClientConnection> clientList = new ArrayList<ClientConnection>();
+	private static ArrayList<ClientConnection> clientList = new ArrayList<>();
 
 	public Server(Integer serverPort) {
 		this.serverPort = serverPort;
