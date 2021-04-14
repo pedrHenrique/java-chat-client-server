@@ -28,7 +28,10 @@ public class ClientActions extends ClientNotificationActions {
 
 	// format: "msg" "login" body...
 	// format: "msg" "#topic" body...
-	// TODO - Se o cliente não estiver logado, um nullpointer é lançado ao tentar enviar uma mensagem
+	// FIXME - Se o cliente não estiver logado, um nullpointer é lançado ao tentar enviar uma mensagem. (Talvez validar primeiro se o usuário está logado)
+	// FIXME - Aparentemente, o primeiro usuario, ao logar, e tentar conversar com o outro usuário que acabou de logar depois dele. O primeiro usuário não consegue enviar uma mensagem
+	// FIXME - Por mais que encontre o usuário que deseja mandar a msg, ele notifica que não o encotrou
+	// FIXME - Correções gerais na classe.
 	public static void handleMessage(ClientConnection client, String[] tokens) {
 		String sendTo = tokens[1];
 		String body = tokens[2];
@@ -53,7 +56,7 @@ public class ClientActions extends ClientNotificationActions {
 
 	protected static void handleLogoff(ClientConnection client) {
 		if (isUserLogado(client)) {
-			notificaTodosOsUsuarios(client, client.getUser().getLogin() + " ficou offline.");
+			notificaTodosOsUsuarios(client, client.getUser().getLogin() + " ficou offline.\n");
 		}
 		Server.removeClientConnection(client);
 		finalizaClientSocket(client);
