@@ -17,7 +17,7 @@ public class ClientNotificationActions {
 	protected static void notificaTodosOsUsuarios(ClientConnection remetente, String mensagem) {
 		for (ClientConnection client : Server.getClientList()) {
 			if (clienteNaoForORemetente(remetente, client) && isUserLogado(client)) {
-				enviaMensagem(client, mensagem);
+				enviaMensagem(remetente, mensagem, client);
 			}
 		}
 	}
@@ -35,7 +35,7 @@ public class ClientNotificationActions {
 		notificaClientViaOutput(client, "Lista de usuários online.\n");
 		for (ClientConnection cl : Server.getClientList()) {
 			if (clienteNaoForORemetente(client, cl) && isUserLogado(cl)) {
-				enviaMensagem(client, cl.getUser().getLogin() + "\n");
+				enviaMensagem(client, cl.getUser().getLogin() + "\n", client);
 			}
 		}
 	}	
@@ -59,17 +59,19 @@ public class ClientNotificationActions {
 	/**
 	 * Envia uma mensagem para o console do cliente.<p>
 	 * 
-	 * Neste caso, a mensagem só será enviada se o <b>cliente estiver com um usuário logado no momento<b>.
+	 * Neste caso, a mensagem só será enviada, se o remetente da mensagem estiver logado no sistema. 
+	 * Caso contrário ele quem receberá uma mensagem o informando que o mesmo precisa estar logado.
 	 * 
-	 * @param client - O Cliente que receberá a mensagem.
+	 * @param clientRemetente - O Cliente que enviou a mensagem.
 	 * @param mensagem - A mensagem.
+	 * @param clientDestinatario - O Cliente que receberá a mensagem.
 	 */
-	protected static void enviaMensagem(ClientConnection client, String mensagem) {
-		if (isUserLogado(client)) {
-			notificaClientViaOutput(client, mensagem);
+	protected static void enviaMensagem(ClientConnection clientRemetente, String mensagem, ClientConnection clientDestinatario) {
+		if (isUserLogado(clientRemetente)) {
+			notificaClientViaOutput(clientDestinatario, mensagem);
 			return;
 		}
-		notificaClientViaOutput(client, "Você precisa estar logado para enviar alguma mensagem!");
+		notificaClientViaOutput(clientRemetente, "Você precisa estar logado para enviar alguma mensagem!");
 	}
 
 }
