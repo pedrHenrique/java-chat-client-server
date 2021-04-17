@@ -86,8 +86,7 @@ public class ClientConnection extends Thread {
 		try {
 			return clientSocket.getOutputStream();
 		} catch (IOException e) {
-			System.err.print("Não foi possível iniciar o outputStream dp " + this + ".\nMotivo: "
-					+ e.getStackTrace());
+			System.err.print("Não foi possível iniciar o outputStream do " + this + ".\nMotivo: " + e.getStackTrace());
 		}
 		return outputStream;
 	}

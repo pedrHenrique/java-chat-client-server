@@ -43,29 +43,43 @@ public class ClientActions extends ClientNotificationActions {
 		if (tokens != null) {
 			String destinatario = tokens[1];
 			String mensagem = tokens[2];
-			notificaUsuario(clientRemetente, destinatario, mensagem);
+			this.notificaUsuario(clientRemetente, destinatario, mensagem);
 		} else {
 			notificaClientViaOutput(clientRemetente, "Ops, a forma como você deseja enviar uma mensagem não pode ser aceita.\n");
 		}
 	}
 
 	private void notificaUsuario(ClientConnection clientRemetente, String destinatario, String mensagem) {
-		for (ClientConnection client : Server.getClientList()) {
-			if (destinatarioFoiEncontrado(destinatario, client)) {
-				mensagem = formataMensagemChat(clientRemetente, mensagem);
-				enviaMensagem(clientRemetente, mensagem , client);
-				return;
-			}
+		if (clientRemetente.getUser().getLogin().equalsIgnoreCase(destinatario)) {
+			notificaClientViaOutput(clientRemetente, "Porquê você estaria tentando enviar uma mensagem para você mesmo?\n");
+			return;
+		}
+		ClientConnection clientDestinatario = retornaClienteComUsuarioInformado(destinatario);
+		if (destinatario != null) {				
+			mensagem = formataMensagemChat(clientRemetente, mensagem);
+			enviaMensagem(clientRemetente, mensagem , clientDestinatario);
+			return;
 		}
 		notificaClientViaOutput(clientRemetente, "Não foi possível encontrar o usuário " + destinatario + ".\n");
+	}
+		
+			
+	
+	public ClientConnection retornaClienteComUsuarioInformado(String usuario) {
+		for (ClientConnection cl : Server.getClientList()) {
+			if (clientFoiEncontrado(usuario, cl)) {
+				return cl;
+			}
+		}
+		return null;
+	}
+	
+	private boolean clientFoiEncontrado(String destinatario, ClientConnection client) {
+		return destinatario.equalsIgnoreCase(client.getUser().getLogin());
 	}
 	
 	private String formataMensagemChat(ClientConnection remetente, String mensagem) {
 		return remetente.getUser().getLogin() + ": " + mensagem + "\n";
-	}
-
-	private boolean destinatarioFoiEncontrado(String destinatario, ClientConnection client) {
-		return destinatario.equalsIgnoreCase(client.getUser().getLogin());
 	}
 
 	protected static void handleLogoff(ClientConnection client) {
@@ -89,7 +103,7 @@ public class ClientActions extends ClientNotificationActions {
 		// TODO -> Validar Usuário com Banco.
 		if (isTokenValidado) {
 			String login = tokens[1];
-			String senha = tokens[2];
+			String senha = tokens[2];			
 			Usuario usuario = new Usuario(null, login, senha);
 			if (usuarioValido(usuario)) {
 				client.setUser(usuario);

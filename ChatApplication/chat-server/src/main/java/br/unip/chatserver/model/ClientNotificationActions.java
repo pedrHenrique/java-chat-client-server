@@ -71,7 +71,7 @@ public class ClientNotificationActions {
 			notificaClientViaOutput(clientDestinatario, mensagem);
 			return;
 		}
-		notificaClientViaOutput(clientRemetente, "Você precisa estar logado para enviar alguma mensagem!");
+		notificaClientViaOutput(clientRemetente, "Você precisa estar logado para enviar alguma mensagem!\n");
 	}
 
 }
