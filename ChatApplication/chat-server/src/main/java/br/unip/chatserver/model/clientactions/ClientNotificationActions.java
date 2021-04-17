@@ -1,10 +1,15 @@
-package br.unip.chatserver.model;
-
-import static br.unip.chatserver.model.ClientActions.isUserLogado;
+package br.unip.chatserver.model.clientactions;
 
 import java.io.IOException;
 
+import br.unip.chatserver.model.ClientConnection;
+import br.unip.chatserver.model.Server;
+
 public class ClientNotificationActions {
+	
+	private ClientNotificationActions() {
+		
+	}
 	
 	/**
 	 * Notifica todos os clientes que estejam com algum usuário logado, alguma mensagem.<p>
@@ -14,9 +19,9 @@ public class ClientNotificationActions {
 	 * @param remetente - O remetente da mensagem.
 	 * @param mensagem  - A mensagem.
 	 */
-	protected static void notificaTodosOsUsuarios(ClientConnection remetente, String mensagem) {
+	public static void notificaTodosOsUsuarios(ClientConnection remetente, String mensagem) {
 		for (ClientConnection client : Server.getClientList()) {
-			if (clienteNaoForORemetente(remetente, client) && isUserLogado(client)) {
+			if (clienteNaoForORemetente(remetente, client) && client.isUserLogado()) {
 				enviaMensagem(remetente, mensagem, client);
 			}
 		}
@@ -31,10 +36,10 @@ public class ClientNotificationActions {
 	 *
 	 * @param client - O cliente que irá receber a lista de usuários online.
 	 */
-	protected static void exibeUsuariosOnlineParaCliente(ClientConnection client) {
+	public static void exibeUsuariosOnlineParaCliente(ClientConnection client) {
 		notificaClientViaOutput(client, "Lista de usuários online.\n");
 		for (ClientConnection cl : Server.getClientList()) {
-			if (clienteNaoForORemetente(client, cl) && isUserLogado(cl)) {
+			if (clienteNaoForORemetente(client, cl) && cl.isUserLogado()) {
 				enviaMensagem(client, cl.getUser().getLogin() + "\n", client);
 			}
 		}
@@ -48,7 +53,7 @@ public class ClientNotificationActions {
 	 * @param client - O Cliente que receberá a mensagem.
 	 * @param mensagem - A mensagem.
 	 */
-	protected static void notificaClientViaOutput(ClientConnection client, String mensagem) {
+	public static void notificaClientViaOutput(ClientConnection client, String mensagem) {
 		try {
 			client.getOutputStream().write(mensagem.getBytes());
 		} catch (IOException e) {
@@ -66,8 +71,8 @@ public class ClientNotificationActions {
 	 * @param mensagem - A mensagem.
 	 * @param clientDestinatario - O Cliente que receberá a mensagem.
 	 */
-	protected static void enviaMensagem(ClientConnection clientRemetente, String mensagem, ClientConnection clientDestinatario) {
-		if (isUserLogado(clientRemetente)) {
+	public static void enviaMensagem(ClientConnection clientRemetente, String mensagem, ClientConnection clientDestinatario) {
+		if (clientRemetente.isUserLogado()) {
 			notificaClientViaOutput(clientDestinatario, mensagem);
 			return;
 		}

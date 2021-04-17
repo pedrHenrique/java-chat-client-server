@@ -4,7 +4,6 @@ import br.unip.chatserver.controler.ClientActionHandler;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.HashSet;
 
 import javax.validation.Valid;
 
@@ -16,8 +15,6 @@ public class ClientConnection extends Thread {
 	private final Socket clientSocket;
 
 	private OutputStream outputStream;	
-
-	private HashSet<String> topicSet = new HashSet<String>();
 
 	public ClientConnection(Socket clientSocket) {
 		this.clientSocket = clientSocket;
