@@ -55,7 +55,7 @@ public class ClientActions extends ClientNotificationActions {
 			return;
 		}
 		ClientConnection clientDestinatario = retornaClienteComUsuarioInformado(destinatario);
-		if (destinatario != null) {				
+		if (clientDestinatario != null) {				
 			mensagem = formataMensagemChat(clientRemetente, mensagem);
 			enviaMensagem(clientRemetente, mensagem , clientDestinatario);
 			return;
@@ -75,7 +75,7 @@ public class ClientActions extends ClientNotificationActions {
 	}
 	
 	private boolean clientFoiEncontrado(String destinatario, ClientConnection client) {
-		return destinatario.equalsIgnoreCase(client.getUser().getLogin());
+		return (client.getUser() != null) ? destinatario.equalsIgnoreCase(client.getUser().getLogin()) : false;
 	}
 	
 	private String formataMensagemChat(ClientConnection remetente, String mensagem) {
