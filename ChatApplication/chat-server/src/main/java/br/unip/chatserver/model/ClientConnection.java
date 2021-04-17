@@ -92,4 +92,8 @@ public class ClientConnection extends Thread {
 		return outputStream;
 	}
 	
+	public boolean isUserLogado() {
+		return this.getUser() != null;
+	}
+	
 }
