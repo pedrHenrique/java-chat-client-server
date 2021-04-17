@@ -33,11 +33,12 @@ public class ClientActions extends ClientNotificationActions {
 	// FIXME - Aparentemente, o primeiro usuario, ao logar, e tentar conversar com o
 	// outro usuário que acabou de logar depois dele. O primeiro usuário não
 	// consegue enviar uma mensagem
-	// FIXME - Por mais que encontre o usuário que deseja mandar a msg, ele notifica
-	// que não o encotrou
 	// FIXME - Correções gerais na classe.
 	public void handleMessage(ClientConnection client, String linha) {
-		this.verificaSeClientePossuiUsuarioLogado(client);
+		if (!client.isUserLogado()) {
+			notificaClientViaOutput(client, "Você precisa estar logado para enviar alguma mensagem.\n");
+			return;
+		}		
 		String[] tokens = this.validaTokenMensagem(linha);		
 		if (tokens != null) {
 			String sendTo = tokens[1];
@@ -64,7 +65,7 @@ public class ClientActions extends ClientNotificationActions {
 
 	private void verificaSeClientePossuiUsuarioLogado(ClientConnection client) {
 		if (!client.isUserLogado()) {
-			notificaClientViaOutput(client, "Você precisa estar logado para enviar alguma mensagem.");
+			notificaClientViaOutput(client, "Você precisa estar logado para enviar alguma mensagem.\n");
 		}
 	}
 
