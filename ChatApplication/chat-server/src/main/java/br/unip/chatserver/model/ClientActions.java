@@ -38,7 +38,7 @@ public class ClientActions extends ClientNotificationActions {
 	// FIXME - Correções gerais na classe.
 	public void handleMessage(ClientConnection client, String linha) {
 		this.verificaSeClientePossuiUsuarioLogado(client);
-		String[] tokens = this.validaTokenMensagem(client, linha);		
+		String[] tokens = this.validaTokenMensagem(linha);		
 		if (tokens != null) {
 			String sendTo = tokens[1];
 			String body = tokens[2];
