@@ -34,39 +34,38 @@ public class ClientActions extends ClientNotificationActions {
 	// outro usuário que acabou de logar depois dele. O primeiro usuário não
 	// consegue enviar uma mensagem
 	// FIXME - Correções gerais na classe.
-	public void handleMessage(ClientConnection client, String linha) {
-		if (!client.isUserLogado()) {
-			notificaClientViaOutput(client, "Você precisa estar logado para enviar alguma mensagem.\n");
+	public void handleMessage(ClientConnection clientRemetente, String linha) {
+		if (!clientRemetente.isUserLogado()) {
+			notificaClientViaOutput(clientRemetente, "Você precisa estar logado para enviar alguma mensagem.\n");
 			return;
 		}		
 		String[] tokens = this.validaTokenMensagem(linha);		
 		if (tokens != null) {
-			String sendTo = tokens[1];
-			String body = tokens[2];
-//			boolean isTopic = sendTo.charAt(0) == '#';
-			for (ClientConnection clientDestinatario : Server.getClientList()) {
-//				if (isTopic) {
-//					if (worker.isMemberOfTopic(sendTo)) {
-//						String outMsg = "msg " + sendTo + ":" + user.getLogin() + " " + body + "\n";
-//						this.send(this, outMsg);
-//					}
-//				} else {
-				if (sendTo.equalsIgnoreCase(clientDestinatario.getUser().getLogin())) {
-					String outMsg = client.getUser().getLogin() + ": " + body + "\n";
-					enviaMensagem(client, outMsg, clientDestinatario);
-					return;
-				}
-				notificaClientViaOutput(client, "Não foi possível encontrar o usuário " + sendTo + ".\n");
-			}
+			String destinatario = tokens[1];
+			String mensagem = tokens[2];
+			notificaUsuario(clientRemetente, destinatario, mensagem);
 		} else {
-			notificaClientViaOutput(client, "Ops, a forma como você deseja enviar uma mensagem não pode ser aceita.\n");
+			notificaClientViaOutput(clientRemetente, "Ops, a forma como você deseja enviar uma mensagem não pode ser aceita.\n");
 		}
-	}	
+	}
 
-	private void verificaSeClientePossuiUsuarioLogado(ClientConnection client) {
-		if (!client.isUserLogado()) {
-			notificaClientViaOutput(client, "Você precisa estar logado para enviar alguma mensagem.\n");
+	private void notificaUsuario(ClientConnection clientRemetente, String destinatario, String mensagem) {
+		for (ClientConnection client : Server.getClientList()) {
+			if (destinatarioFoiEncontrado(destinatario, client)) {
+				mensagem = formataMensagemChat(clientRemetente, mensagem);
+				enviaMensagem(clientRemetente, mensagem , client);
+				return;
+			}
 		}
+		notificaClientViaOutput(clientRemetente, "Não foi possível encontrar o usuário " + destinatario + ".\n");
+	}
+	
+	private String formataMensagemChat(ClientConnection remetente, String mensagem) {
+		return remetente.getUser().getLogin() + ": " + mensagem + "\n";
+	}
+
+	private boolean destinatarioFoiEncontrado(String destinatario, ClientConnection client) {
+		return destinatario.equalsIgnoreCase(client.getUser().getLogin());
 	}
 
 	protected static void handleLogoff(ClientConnection client) {
