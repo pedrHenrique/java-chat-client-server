@@ -31,7 +31,7 @@ public final class ClientMessageActions {
 			return;
 		}
 		ClientConnection clientDestinatario = retornaClienteComUsuarioInformado(destinatario);
-		if (destinatario != null) {				
+		if (clientDestinatario != null) {				
 			mensagem = formataMensagemChat(clientRemetente, mensagem);
 			enviaMensagem(clientRemetente, mensagem , clientDestinatario);
 			return;

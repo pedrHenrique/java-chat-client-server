@@ -28,7 +28,7 @@ public class ClientNotificationActions {
 	}
 
 	private static boolean clienteNaoForORemetente(ClientConnection remetente, ClientConnection client) {
-		return !remetente.getUser().equals(client.getUser());
+		return (remetente.getUser() != null) ? !remetente.getUser().equals(client.getUser()) : false;
 	}
 
 	/**
