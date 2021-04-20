@@ -1,9 +1,15 @@
 package br.unip.chatserver.model.clientactions;
 
+import static br.unip.chatserver.model.clientactions.util.ActionsUtil.retornaClienteComUsuarioInformado;
+
 import java.io.IOException;
 
+import javax.validation.Valid;
+
+import br.unip.chatserver.model.ChatMessage;
 import br.unip.chatserver.model.ClientConnection;
 import br.unip.chatserver.model.Server;
+import br.unip.chatserver.model.clientactions.util.ActionsUtil;
 
 public class ClientNotificationActions {
 	
@@ -77,6 +83,22 @@ public class ClientNotificationActions {
 			return;
 		}
 		notificaClientViaOutput(clientRemetente, "Você precisa estar logado para enviar alguma mensagem!\n");
+	}
+	
+	/**
+	 * Envia uma mensagem para o console do cliente.<p>
+	 * 
+	 * Neste caso, a mensagem só será enviada, se o remetente da mensagem estiver logado no sistema. 
+	 * Caso contrário ele quem receberá uma mensagem o informando que o mesmo precisa estar logado.
+	 * 
+	 * @param clientRemetente - O Cliente que enviou a mensagem.
+	 * @param mensagem - A mensagem.
+	 * @param clientDestinatario - O Cliente que receberá a mensagem.
+	 */
+	public static void enviaChatMensagem(@Valid ChatMessage mensagem) {
+		// TODO Validar Mensagem
+		ClientConnection clientDestinatario = retornaClienteComUsuarioInformado(mensagem.getDestinatario().getLogin());
+		notificaClientViaOutput(clientDestinatario, mensagem.toString());
 	}
 
 }

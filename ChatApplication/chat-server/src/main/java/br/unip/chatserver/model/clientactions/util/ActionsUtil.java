@@ -21,7 +21,7 @@ public final class ActionsUtil {
 	}
 	
 	private static boolean clientFoiEncontrado(String destinatario, ClientConnection client) {
-		return destinatario.equalsIgnoreCase(client.getUser().getLogin());
+		return (client.getUser() != null) ? destinatario.equalsIgnoreCase(client.getUser().getLogin()) : false;
 	}
 	
 	public static boolean validaToken(String[] tokens) {
@@ -35,5 +35,7 @@ public final class ActionsUtil {
 		}
 		return true;
 	}
+	
+	
 
 }

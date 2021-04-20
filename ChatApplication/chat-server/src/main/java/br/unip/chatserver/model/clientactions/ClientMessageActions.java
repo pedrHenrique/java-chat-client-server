@@ -1,12 +1,14 @@
 package br.unip.chatserver.model.clientactions;
 
 import static br.unip.chatserver.model.clientactions.ClientNotificationActions.enviaMensagem;
+import static br.unip.chatserver.model.clientactions.ClientNotificationActions.enviaChatMensagem;
 import static br.unip.chatserver.model.clientactions.ClientNotificationActions.notificaClientViaOutput;
 import static br.unip.chatserver.model.clientactions.util.ActionsUtil.validaToken;
 import static br.unip.chatserver.model.clientactions.util.ActionsUtil.retornaClienteComUsuarioInformado;
 
 import org.apache.commons.lang3.StringUtils;
 
+import br.unip.chatserver.model.ChatMessage;
 import br.unip.chatserver.model.ClientConnection;
 
 public final class ClientMessageActions {
@@ -32,8 +34,10 @@ public final class ClientMessageActions {
 		}
 		ClientConnection clientDestinatario = retornaClienteComUsuarioInformado(destinatario);
 		if (clientDestinatario != null) {				
-			mensagem = formataMensagemChat(clientRemetente, mensagem);
-			enviaMensagem(clientRemetente, mensagem , clientDestinatario);
+			//String mensagem = formataMensagemChat(clientRemetente, mensagem);
+			//enviaMensagem(clientRemetente, mensagem , clientDestinatario);
+			ChatMessage chatMensagem = new ChatMessage(clientRemetente.getUser(), mensagem, clientDestinatario.getUser());
+			enviaChatMensagem(chatMensagem);
 			return;
 		}
 		notificaClientViaOutput(clientRemetente, "Não foi possível encontrar o usuário " + destinatario + ".\n");
