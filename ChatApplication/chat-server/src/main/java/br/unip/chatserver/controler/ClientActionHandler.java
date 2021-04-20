@@ -1,5 +1,7 @@
 package br.unip.chatserver.controler;
 
+import static br.unip.chatserver.model.clientactions.ClientNotificationActions.notificaClientViaOutput;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,8 +9,8 @@ import java.io.InputStreamReader;
 
 import org.apache.commons.lang3.StringUtils;
 
-import br.unip.chatserver.model.ClientActions;
 import br.unip.chatserver.model.ClientConnection;
+import br.unip.chatserver.model.clientactions.ClientActions;
 
 public final class ClientActionHandler extends ClientActions {
 	
@@ -37,20 +39,16 @@ public final class ClientActionHandler extends ClientActions {
 			handleLogoff(client);
 		} else if ("login".equalsIgnoreCase(comando)) {
 			handleLogin(client, tokens);
-		} else if ("msg".equalsIgnoreCase(comando)) {
-			//String[] tokensMsg = StringUtils.split(line, null, 3);
-			//handleMessage(tokensMsg);
-			notificaClientViaOutput(client, "Feature ainda não disponível.\n");
-		} else if ("join".equalsIgnoreCase(comando)) {
-			//handleJoin(tokens);
-			notificaClientViaOutput(client, "Feature ainda não disponível.\n");
+		} else if ("msg".equalsIgnoreCase(comando)) {			
+			handleMessage(client ,line);				
+		} else if ("join".equalsIgnoreCase(comando)) {			
+			notificaClientViaOutput(client, "Feature ainda não disponível.\n"); //handleJoin(tokens);
 		} else if ("leave".equalsIgnoreCase(comando)) {
-			//handleLeave(tokens);
-			notificaClientViaOutput(client, "Feature ainda não disponível.\n");
+			notificaClientViaOutput(client, "Feature ainda não disponível.\n"); //handleLeave(tokens);
 		} else if ("user".equalsIgnoreCase(comando)){
-			notificaClientViaOutput(client, "Eu sou o usuário(a): " + client.getUser().getLogin() + "\n");
+			showUser(client);
 		} else if ("userlist".equalsIgnoreCase(comando)) {
-			exibeUsuariosOnlineParaCliente(client);
+			showOnlineUserList(client);
 		} else {
 			notificaClientViaOutput(client, "Comando " + comando + " não pode ser reconhecido.\n");
 		}

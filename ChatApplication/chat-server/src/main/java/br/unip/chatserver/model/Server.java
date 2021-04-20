@@ -78,6 +78,11 @@ public class Server {
 		clientList.remove(client);
 	}
 
+	/**
+	 * Notifica no console do servidor algum evento.
+	 *
+	 * @param mensagem - A mensagem que deve ser notificada no console do servidor.
+	 */
 	public static void notificaNoConsoleDoServidor(String mensagem) {
 		//LOGGER.info(mensagem);
 		System.out.println(mensagem);

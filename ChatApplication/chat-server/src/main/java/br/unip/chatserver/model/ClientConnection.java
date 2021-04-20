@@ -4,7 +4,6 @@ import br.unip.chatserver.controler.ClientActionHandler;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.HashSet;
 
 import javax.validation.Valid;
 
@@ -16,8 +15,6 @@ public class ClientConnection extends Thread {
 	private final Socket clientSocket;
 
 	private OutputStream outputStream;	
-
-	private HashSet<String> topicSet = new HashSet<String>();
 
 	public ClientConnection(Socket clientSocket) {
 		this.clientSocket = clientSocket;
@@ -86,10 +83,13 @@ public class ClientConnection extends Thread {
 		try {
 			return clientSocket.getOutputStream();
 		} catch (IOException e) {
-			System.err.print("Não foi possível iniciar o outputStream dp " + this + ".\nMotivo: "
-					+ e.getStackTrace());
+			System.err.print("Não foi possível iniciar o outputStream do " + this + ".\nMotivo: " + e.getStackTrace());
 		}
 		return outputStream;
+	}
+	
+	public boolean isUserLogado() {
+		return this.getUser() != null;
 	}
 	
 }
