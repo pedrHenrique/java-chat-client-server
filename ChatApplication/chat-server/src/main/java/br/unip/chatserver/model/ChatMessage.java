@@ -122,11 +122,12 @@ public class ChatMessage {
 		return true;
 	}
 
+	// TODO No futuro, melhorar a visualização da hora na mensagem. Forma atual não exibe corretamente os '00'
 	@Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE).append(data.toLocalDateTime().getHour() + ":" + data.toLocalDateTime().getMinute() + " ")
-        								.append(remetente.getLogin() + ": ")
-        								.append(mensagem + "\n").toString();
+        return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE)
+        		.append(data.toLocalDateTime().getHour() + ":" + data.toLocalDateTime().getMinute() + " - " + 
+        				remetente.getLogin() + ": " + mensagem + "\n").toString();
     }	
 
 }
