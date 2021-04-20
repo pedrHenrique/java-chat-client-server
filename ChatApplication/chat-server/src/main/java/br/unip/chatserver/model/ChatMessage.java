@@ -6,6 +6,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class ChatMessage {
 	
@@ -123,7 +124,7 @@ public class ChatMessage {
 
 	@Override
     public String toString() {
-        return new ToStringBuilder(this).append("Data: " + data.toString() + " ")
+        return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE).append(data.toLocalDateTime().getHour() + ":" + data.toLocalDateTime().getMinute() + " ")
         								.append(remetente.getLogin() + ": ")
         								.append(mensagem + "\n").toString();
     }	
