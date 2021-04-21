@@ -7,12 +7,12 @@ package br.unip.chatclient.view;
 
 /**
  *
- * @author Pedro
+ * @author Felipe
  */
 public class Login extends javax.swing.JFrame {
 
     /**
-     * Creates new form Login
+     * Creates new form Cadastro
      */
     public Login() {
         initComponents();
@@ -27,21 +27,201 @@ public class Login extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jP_Titulo = new javax.swing.JPanel();
+        jL_Titulo = new javax.swing.JLabel();
+        jL_Instrucao = new javax.swing.JLabel();
+        jP_User = new javax.swing.JPanel();
+        jL_IconUser = new javax.swing.JLabel();
+        jT_User = new javax.swing.JTextField();
+        jP_Senha = new javax.swing.JPanel();
+        jL_IconSenha = new javax.swing.JLabel();
+        jPassword_Senha = new javax.swing.JPasswordField();
+        Bt_Login = new javax.swing.JButton();
+        Bt_Cancela = new javax.swing.JButton();
+        Bt_NewConta = new javax.swing.JButton();
+        Bt_Esqueci_Senha = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 255, 255));
+        setResizable(false);
+
+        jP_Titulo.setBackground(new java.awt.Color(0, 153, 51));
+
+        jL_Titulo.setFont(new java.awt.Font("Goudy Old Style", 1, 36)); // NOI18N
+        jL_Titulo.setForeground(new java.awt.Color(255, 255, 255));
+        jL_Titulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jL_Titulo.setText("Login de Acesso");
+
+        javax.swing.GroupLayout jP_TituloLayout = new javax.swing.GroupLayout(jP_Titulo);
+        jP_Titulo.setLayout(jP_TituloLayout);
+        jP_TituloLayout.setHorizontalGroup(
+            jP_TituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jP_TituloLayout.createSequentialGroup()
+                .addGap(120, 120, 120)
+                .addComponent(jL_Titulo, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jP_TituloLayout.setVerticalGroup(
+            jP_TituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jP_TituloLayout.createSequentialGroup()
+                .addComponent(jL_Titulo, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 8, Short.MAX_VALUE))
+        );
+
+        jL_Instrucao.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        jL_Instrucao.setText("Insira o usuário e a senha para entrar !");
+
+        jP_User.setBackground(new java.awt.Color(255, 255, 255));
+        jP_User.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jP_User.setPreferredSize(new java.awt.Dimension(410, 56));
+
+        jL_IconUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/unip/chatclient/view/img/usuario.png"))); // NOI18N
+
+        jT_User.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jT_User.setBorder(null);
+        jT_User.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jT_UserActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jP_UserLayout = new javax.swing.GroupLayout(jP_User);
+        jP_User.setLayout(jP_UserLayout);
+        jP_UserLayout.setHorizontalGroup(
+            jP_UserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jP_UserLayout.createSequentialGroup()
+                .addGap(2, 2, 2)
+                .addComponent(jL_IconUser, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jT_User))
+        );
+        jP_UserLayout.setVerticalGroup(
+            jP_UserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jL_IconUser, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jT_User)
+        );
+
+        jP_Senha.setBackground(new java.awt.Color(255, 255, 255));
+        jP_Senha.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jL_IconSenha.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/unip/chatclient/view/img/senha.png"))); // NOI18N
+
+        jPassword_Senha.setBorder(null);
+
+        javax.swing.GroupLayout jP_SenhaLayout = new javax.swing.GroupLayout(jP_Senha);
+        jP_Senha.setLayout(jP_SenhaLayout);
+        jP_SenhaLayout.setHorizontalGroup(
+            jP_SenhaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jP_SenhaLayout.createSequentialGroup()
+                .addComponent(jL_IconSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPassword_Senha, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE))
+        );
+        jP_SenhaLayout.setVerticalGroup(
+            jP_SenhaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jL_IconSenha, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
+            .addComponent(jPassword_Senha)
+        );
+
+        Bt_Login.setBackground(new java.awt.Color(255, 0, 0));
+        Bt_Login.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        Bt_Login.setForeground(new java.awt.Color(255, 255, 255));
+        Bt_Login.setText("Cancelar");
+        Bt_Login.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        Bt_Login.setContentAreaFilled(false);
+        Bt_Login.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        Bt_Login.setOpaque(true);
+        Bt_Login.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Bt_LoginActionPerformed(evt);
+            }
+        });
+
+        Bt_Cancela.setBackground(new java.awt.Color(0, 153, 51));
+        Bt_Cancela.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        Bt_Cancela.setForeground(new java.awt.Color(255, 255, 255));
+        Bt_Cancela.setText("Entrar");
+        Bt_Cancela.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        Bt_Cancela.setContentAreaFilled(false);
+        Bt_Cancela.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        Bt_Cancela.setOpaque(true);
+        Bt_Cancela.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Bt_CancelaActionPerformed(evt);
+            }
+        });
+
+        Bt_NewConta.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        Bt_NewConta.setForeground(new java.awt.Color(51, 0, 204));
+        Bt_NewConta.setText("Não tem uma conta?");
+        Bt_NewConta.setBorderPainted(false);
+        Bt_NewConta.setContentAreaFilled(false);
+
+        Bt_Esqueci_Senha.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        Bt_Esqueci_Senha.setForeground(new java.awt.Color(51, 0, 204));
+        Bt_Esqueci_Senha.setText("Esqueci a senha ?");
+        Bt_Esqueci_Senha.setBorderPainted(false);
+        Bt_Esqueci_Senha.setContentAreaFilled(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(jP_Titulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(85, 85, 85)
+                .addComponent(jL_Instrucao)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jP_Senha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jP_User, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
+                    .addComponent(Bt_Login, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(Bt_Cancela, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(Bt_Esqueci_Senha)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(Bt_NewConta)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jP_Titulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28)
+                .addComponent(jL_Instrucao)
+                .addGap(32, 32, 32)
+                .addComponent(jP_User, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jP_Senha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(Bt_NewConta)
+                    .addComponent(Bt_Esqueci_Senha))
+                .addGap(18, 18, 18)
+                .addComponent(Bt_Cancela, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(Bt_Login, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jT_UserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jT_UserActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jT_UserActionPerformed
+
+    private void Bt_CancelaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Bt_CancelaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Bt_CancelaActionPerformed
+
+    private void Bt_LoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Bt_LoginActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Bt_LoginActionPerformed
 
     /**
      * @param args the command line arguments
@@ -69,6 +249,7 @@ public class Login extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -79,5 +260,18 @@ public class Login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Bt_Cancela;
+    private javax.swing.JButton Bt_Esqueci_Senha;
+    private javax.swing.JButton Bt_Login;
+    private javax.swing.JButton Bt_NewConta;
+    private javax.swing.JLabel jL_IconSenha;
+    private javax.swing.JLabel jL_IconUser;
+    private javax.swing.JLabel jL_Instrucao;
+    private javax.swing.JLabel jL_Titulo;
+    private javax.swing.JPanel jP_Senha;
+    private javax.swing.JPanel jP_Titulo;
+    private javax.swing.JPanel jP_User;
+    private javax.swing.JPasswordField jPassword_Senha;
+    private javax.swing.JTextField jT_User;
     // End of variables declaration//GEN-END:variables
 }
