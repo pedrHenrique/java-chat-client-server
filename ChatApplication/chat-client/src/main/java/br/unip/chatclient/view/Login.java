@@ -16,6 +16,7 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
+        this.setVisible(true);
     }
 
     /**
@@ -69,7 +70,7 @@ public class Login extends javax.swing.JFrame {
         );
 
         jL_Instrucao.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
-        jL_Instrucao.setText("Insira o usuário e a senha para entrar !");
+        jL_Instrucao.setText("Insira o usuï¿½rio e a senha para entrar !");
 
         jP_User.setBackground(new java.awt.Color(255, 255, 255));
         jP_User.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -153,7 +154,7 @@ public class Login extends javax.swing.JFrame {
 
         Bt_NewConta.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         Bt_NewConta.setForeground(new java.awt.Color(51, 0, 204));
-        Bt_NewConta.setText("Não tem uma conta?");
+        Bt_NewConta.setText("Nï¿½o tem uma conta?");
         Bt_NewConta.setBorderPainted(false);
         Bt_NewConta.setContentAreaFilled(false);
 
@@ -220,9 +221,15 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_Bt_CancelaActionPerformed
 
     private void Bt_LoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Bt_LoginActionPerformed
-        // TODO add your handling code here:
+        String usuario = this.jT_User.getText();
+        String senha = this.jPassword_Senha.getSelectedText();
+        this.realizaLogin(usuario, senha);
     }//GEN-LAST:event_Bt_LoginActionPerformed
 
+    public void realizaLogin(String usuario, String senha) {
+        
+    }
+    
     /**
      * @param args the command line arguments
      */
