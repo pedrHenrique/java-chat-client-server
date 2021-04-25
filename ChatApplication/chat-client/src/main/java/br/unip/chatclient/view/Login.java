@@ -5,18 +5,27 @@
  */
 package br.unip.chatclient.view;
 
+import br.unip.chatclient.model.ServerCommunication;
+import br.unip.chatclient.util.notifier.UserMessageNotifier;
+import java.io.IOException;
+
 /**
  *
  * @author Felipe
  */
 public class Login extends javax.swing.JFrame {
+	
+	ServerCommunication serverCommunicator;
 
-    /**
-     * Creates new form Cadastro
-     */
     public Login() {
         initComponents();
         this.setVisible(true);
+    }
+    
+    public Login(ServerCommunication sc) {
+        initComponents();   
+        this.setVisible(true);
+        this.serverCommunicator = sc;
     }
 
     /**
@@ -37,8 +46,8 @@ public class Login extends javax.swing.JFrame {
         jP_Senha = new javax.swing.JPanel();
         jL_IconSenha = new javax.swing.JLabel();
         jPassword_Senha = new javax.swing.JPasswordField();
-        Bt_Login = new javax.swing.JButton();
-        Bt_Cancela = new javax.swing.JButton();
+        Bt_Cancelar = new javax.swing.JButton();
+        Bt_Entrar = new javax.swing.JButton();
         Bt_NewConta = new javax.swing.JButton();
         Bt_Esqueci_Senha = new javax.swing.JButton();
 
@@ -124,31 +133,31 @@ public class Login extends javax.swing.JFrame {
             .addComponent(jPassword_Senha)
         );
 
-        Bt_Login.setBackground(new java.awt.Color(255, 0, 0));
-        Bt_Login.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        Bt_Login.setForeground(new java.awt.Color(255, 255, 255));
-        Bt_Login.setText("Cancelar");
-        Bt_Login.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        Bt_Login.setContentAreaFilled(false);
-        Bt_Login.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        Bt_Login.setOpaque(true);
-        Bt_Login.addActionListener(new java.awt.event.ActionListener() {
+        Bt_Cancelar.setBackground(new java.awt.Color(255, 0, 0));
+        Bt_Cancelar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        Bt_Cancelar.setForeground(new java.awt.Color(255, 255, 255));
+        Bt_Cancelar.setText("Cancelar");
+        Bt_Cancelar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        Bt_Cancelar.setContentAreaFilled(false);
+        Bt_Cancelar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        Bt_Cancelar.setOpaque(true);
+        Bt_Cancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Bt_LoginActionPerformed(evt);
+                Bt_CancelarActionPerformed(evt);
             }
         });
 
-        Bt_Cancela.setBackground(new java.awt.Color(0, 153, 51));
-        Bt_Cancela.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        Bt_Cancela.setForeground(new java.awt.Color(255, 255, 255));
-        Bt_Cancela.setText("Entrar");
-        Bt_Cancela.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        Bt_Cancela.setContentAreaFilled(false);
-        Bt_Cancela.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        Bt_Cancela.setOpaque(true);
-        Bt_Cancela.addActionListener(new java.awt.event.ActionListener() {
+        Bt_Entrar.setBackground(new java.awt.Color(0, 153, 51));
+        Bt_Entrar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        Bt_Entrar.setForeground(new java.awt.Color(255, 255, 255));
+        Bt_Entrar.setText("Entrar");
+        Bt_Entrar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        Bt_Entrar.setContentAreaFilled(false);
+        Bt_Entrar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        Bt_Entrar.setOpaque(true);
+        Bt_Entrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Bt_CancelaActionPerformed(evt);
+                Bt_EntrarActionPerformed(evt);
             }
         });
 
@@ -180,8 +189,8 @@ public class Login extends javax.swing.JFrame {
                         .addComponent(jP_Senha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jP_User, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
-                    .addComponent(Bt_Login, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(Bt_Cancela, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(Bt_Cancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(Bt_Entrar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(Bt_Esqueci_Senha)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -203,9 +212,9 @@ public class Login extends javax.swing.JFrame {
                     .addComponent(Bt_NewConta)
                     .addComponent(Bt_Esqueci_Senha))
                 .addGap(18, 18, 18)
-                .addComponent(Bt_Cancela, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Bt_Entrar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(Bt_Login, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Bt_Cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(42, Short.MAX_VALUE))
         );
 
@@ -216,17 +225,26 @@ public class Login extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jT_UserActionPerformed
 
-    private void Bt_CancelaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Bt_CancelaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_Bt_CancelaActionPerformed
-
-    private void Bt_LoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Bt_LoginActionPerformed
-        String usuario = this.jT_User.getText();
-        String senha = this.jPassword_Senha.getSelectedText();
+    private void Bt_EntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Bt_EntrarActionPerformed
+    	String usuario = this.jT_User.getText();
+        String senha = String.valueOf(this.jPassword_Senha.getPassword());
         this.realizaLogin(usuario, senha);
-    }//GEN-LAST:event_Bt_LoginActionPerformed
+    }//GEN-LAST:event_Bt_EntrarActionPerformed
 
-    public void realizaLogin(String usuario, String senha) {
+    private void Bt_CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Bt_CancelarActionPerformed
+
+    }//GEN-LAST:event_Bt_CancelarActionPerformed
+
+    public void realizaLogin(String usuario, String senha) {    	
+        try {   
+        	serverCommunicator.doLogin(usuario, senha);
+            new Chat();
+        	this.dispose();
+        } catch (IOException io) {
+            UserMessageNotifier.infoMessagePane(this, io.getMessage());
+        } catch (IllegalArgumentException e) {
+        	UserMessageNotifier.infoMessagePane(this, e.getMessage());
+		}
         
     }
     
@@ -265,11 +283,19 @@ public class Login extends javax.swing.JFrame {
             }
         });
     }
+    
+    public ServerCommunication getServerCommunicator() {
+		return serverCommunicator;
+	}
+
+	public void setServerCommunicator(ServerCommunication sc) {
+		this.serverCommunicator = sc;
+	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Bt_Cancela;
+    private javax.swing.JButton Bt_Cancelar;
+    private javax.swing.JButton Bt_Entrar;
     private javax.swing.JButton Bt_Esqueci_Senha;
-    private javax.swing.JButton Bt_Login;
     private javax.swing.JButton Bt_NewConta;
     private javax.swing.JLabel jL_IconSenha;
     private javax.swing.JLabel jL_IconUser;

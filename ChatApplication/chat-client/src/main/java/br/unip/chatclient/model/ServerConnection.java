@@ -15,13 +15,11 @@ public class ServerConnection {
     
     private Socket socket;
     
-    private InputStream serverIn;
+    private InputStream serverIn; // Recebe uma mensagem!!
     
-    private OutputStream serverOut; // Envia uma solicitação ao servidor?
+    private OutputStream serverOut; // Envia uma solicitação ao servidor!!
     
     private BufferedReader bufferedIn;
-    
-    private String connectionStatusMessage;
 
 	public ServerConnection(String serverAddres, Integer serverPort) {
 		this.serverAddres = serverAddres;
@@ -39,10 +37,8 @@ public class ServerConnection {
         try {
             this.socket = new Socket(serverAddres, serverPort);
             this.iniciaFerramentasDaConexao();
-            this.setConnectionStatusMessage("Conexão realizada com Sucesso!");
         } catch (IOException e) {
-        	this.setConnectionStatusMessage("Não foi possível se conectar ao servidor.\nMotivo: " + e.getMessage() + ".");
-            throw new IOException();
+            throw new IOException("Não foi possível se conectar ao servidor.\nMotivo: " + e.getMessage() + ".");
         }
     }
 	
@@ -50,8 +46,7 @@ public class ServerConnection {
 		try {
 			return socket.getOutputStream();
 		} catch (IOException e) {			
-			this.setConnectionStatusMessage("Não foi possível iniciar o outputStream.nMotivo: " + e.getStackTrace() + ".");
-			throw new IOException();
+			throw new IOException("Não foi possível iniciar o outputStream.nMotivo: " + e.getStackTrace() + ".");
 		}
 	}
 	
@@ -59,8 +54,7 @@ public class ServerConnection {
 		try {
 			return socket.getInputStream();
 		} catch (IOException e) {
-			this.setConnectionStatusMessage("Não foi possível iniciar o InputStream.\nMotivo: " + e.getStackTrace() + ".");
-			throw new IOException();
+			throw new IOException("Não foi possível iniciar o InputStream.\nMotivo: " + e.getStackTrace() + ".");
 		}
 	}
 
@@ -80,11 +74,8 @@ public class ServerConnection {
 		return serverOut;
 	}
 	
-	public String getConnectionStatusMessage() {
-		return connectionStatusMessage;
+	public ServerCommunication retornaComunicadorComServidor(ServerConnection conexao) {
+		return new ServerCommunication(conexao);
 	}
-	
-	public void setConnectionStatusMessage(String connectionStatusMessage) {
-		this.connectionStatusMessage = connectionStatusMessage;
-	}
+
 }

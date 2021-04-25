@@ -8,7 +8,11 @@ import br.unip.chatserver.model.ClientConnection;
 import br.unip.chatserver.model.Server;
 import br.unip.chatserver.model.Usuario;
 
-public final class ClientLoginActions {	
+public final class ClientLoginActions {
+	
+	private ClientLoginActions() {
+		
+	}
 	
 	protected static void notificacoesPosClienteLogado(ClientConnection client, Usuario usuario) {
 		notificaClientViaOutput(client, "Login realizado com sucesso!\n");

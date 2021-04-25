@@ -14,22 +14,28 @@ public class ClientConnection extends Thread {
 
 	private final Socket clientSocket;
 
-	private OutputStream outputStream;	
+	private OutputStream outputStream;
+	
+	private InputStream inputStream;
+	
+	private BufferedReader bufferedReader;
 
 	public ClientConnection(Socket clientSocket) {
 		this.clientSocket = clientSocket;
+		this.inputStream = this.iniciaInputStream();
 		this.outputStream = this.iniciaClientOuputStream();
+		this.bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 	}	
 
 	@Override
 	public void run() {
 		ClientActionHandler clientActionHandler = new ClientActionHandler(this);
-		while (clientIsConnected()) {
+		while (isClientConnected()) {
 			clientActionHandler.clientListener();
 		}
 	}		
 
-	private boolean clientIsConnected() {
+	private boolean isClientConnected() {
 		return !clientSocket.isClosed();
 	}
 
@@ -75,6 +81,14 @@ public class ClientConnection extends Thread {
 		return outputStream;
 	}
 	
+	public InputStream getInputStream() {
+		return inputStream;
+	}
+	
+	public BufferedReader getBufferedReader() {
+		return bufferedReader;
+	}
+	
 	public Socket getClientSocket() {
 		return clientSocket;
 	}
@@ -86,6 +100,15 @@ public class ClientConnection extends Thread {
 			System.err.print("Não foi possível iniciar o outputStream do " + this + ".\nMotivo: " + e.getStackTrace());
 		}
 		return outputStream;
+	}
+	
+	private InputStream iniciaInputStream() {
+		try {
+			return clientSocket.getInputStream();
+		} catch (IOException e) {
+			System.err.print("Não foi possível iniciar o InputStream do " + this + ".\nMotivo: " + e.getStackTrace());
+		}
+		return inputStream;
 	}
 	
 	public boolean isUserLogado() {

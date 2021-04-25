@@ -41,8 +41,8 @@
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
                   <Component id="jP_User" alignment="1" pref="469" max="32767" attributes="0"/>
-                  <Component id="Bt_Login" alignment="0" max="32767" attributes="0"/>
-                  <Component id="Bt_Cancela" alignment="1" max="32767" attributes="0"/>
+                  <Component id="Bt_Cancelar" alignment="0" max="32767" attributes="0"/>
+                  <Component id="Bt_Entrar" alignment="1" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="Bt_Esqueci_Senha" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
@@ -69,9 +69,9 @@
                   <Component id="Bt_Esqueci_Senha" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="Bt_Cancela" min="-2" pref="44" max="-2" attributes="0"/>
+              <Component id="Bt_Entrar" min="-2" pref="44" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="Bt_Login" min="-2" pref="44" max="-2" attributes="0"/>
+              <Component id="Bt_Cancelar" min="-2" pref="44" max="-2" attributes="0"/>
               <EmptySpace pref="42" max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -229,7 +229,7 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JButton" name="Bt_Login">
+    <Component class="javax.swing.JButton" name="Bt_Cancelar">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="0" green="0" red="ff" type="rgb"/>
@@ -253,10 +253,10 @@
         <Property name="opaque" type="boolean" value="true"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="Bt_LoginActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="Bt_CancelarActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="Bt_Cancela">
+    <Component class="javax.swing.JButton" name="Bt_Entrar">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="33" green="99" red="0" type="rgb"/>
@@ -280,7 +280,7 @@
         <Property name="opaque" type="boolean" value="true"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="Bt_CancelaActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="Bt_EntrarActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="Bt_NewConta">
