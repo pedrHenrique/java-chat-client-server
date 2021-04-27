@@ -2,6 +2,8 @@ package br.unip.chatclient.model;
 
 import java.io.IOException;
 
+import br.unip.chatclient.util.notifier.UserMessageNotifier;
+
 /**
  * The Class ServerCommunication.
  * 
@@ -25,29 +27,56 @@ public final class ServerCommunication {
 		this.connection = connection;
 	}
 	
-	public boolean doLogin(String usuario, String senha) throws IOException, IllegalArgumentException {		
-		final String COMANDO_LOGIN = "login ";
+	public void doLogin(String usuario, String senha) throws IOException, IllegalArgumentException {				
 		// Validar a conexão.
-		this.validaComunicacaoComServidor();
-		
-		// Enviando uma requisição ao servidor
-		String comando = COMANDO_LOGIN + usuario + " " + senha + "\n";
-		connection.getServerOut().write(comando.getBytes());
-		
-		// Lendo o retorno da requisição
-		String resposta = connection.getBufferedIn().readLine();
-        
+		this.validaComunicacaoComServidor();		
+		final String comandoLogin = "login ";
+		String comando = comandoLogin + usuario + " " + senha + "\n";
+		enviaComandoParaServer(comando);
+		String resposta = retornaRespostaServidor();
         if (resposta.contains(SUCESSO)) {
-        	// do something
-        	return true;
+        	//
         } else {
         	throw new IllegalArgumentException(resposta);
         }
 	}
+	
+	public void doLogoff() throws IOException, IllegalArgumentException {
+		this.validaComunicacaoComServidor();
+		final String comandoLogoff = "logoff\n";
+		enviaComandoParaServer(comandoLogoff);
+		String resposta = retornaRespostaServidor();
+		if (resposta.contains(SUCESSO)) {
+			connection.finalizaComunicacaoComServidor();
+			return;
+		}
+		throw new IOException(resposta);
+	}
+
+	// Lendo o retorno da requisição
+	private String retornaRespostaServidor() throws IOException {
+		try {
+			// O servidor nem sempre retorna alguma mensagem quando uma solicitação é feita.
+			// Se a reposta for nula, retorna um simples vázio para evitar um NullPointerException
+			String resposta = connection.getBufferedIn().readLine();
+			return (resposta != null) ? resposta : "";
+		} catch (IOException e) {			
+			throw new IOException("Não foi possível ler a resposta do servidor!!\nMotivo: " + e.getCause()); 
+		}
+	}
+
+	// Enviando uma requisição ao servidor
+	private void enviaComandoParaServer(String comando) throws IOException {
+		try {
+			connection.getServerOut().write(comando.getBytes());
+		} catch (Exception e) {
+			throw new IOException("Não foi possível enviar uma requisição do servidor!!\nMotivo: " + e.getCause()); 
+		}		
+	}
 
 	private void validaComunicacaoComServidor() throws IOException {
 		if (!connection.isConexaoComServidorEstabelecida()) {
-			throw new IOException("Não foi possível realizar o login. Você não está conectado ao servidor\n");
+			throw new IOException("Não foi possível realizar a solicitação para o Servidor. Você não está conectado no momento.\n");
 		}
 	}
 

@@ -22,18 +22,20 @@ public class ClientActions {
 	}
 
 	public static void handleLogoff(ClientConnection client) {
-		if (!client.isUserLogado()) {
+		if (client.isUserLogado()) {
 			notificaTodosOsUsuarios(client, client.getUser().getLogin() + " ficou offline.\n");
 		}
-		Server.removeClientConnection(client);
 		finalizaClientSocket(client);
 	}
 
 	public static void finalizaClientSocket(ClientConnection client) {
 		try {
 			client.getClientSocket().close();
+			Server.removeClientConnection(client);
+			Server.notificaNoConsoleDoServidor(client + " se desconectou do servidor.\n");
 		} catch (IOException e) {
 			System.err.println("Não foi possível fechar o soquete " + client.getClientSocket() + ".\nMotivo: " + e.getStackTrace());
+			notificaClientViaOutput(client, "falha: Não foi possível fechar sua conexão com o servidor... Por favor, tente novamente uma outra vez.\n");
 		}
 	}
 	

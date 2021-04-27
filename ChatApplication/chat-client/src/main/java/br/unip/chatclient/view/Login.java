@@ -232,10 +232,16 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_Bt_EntrarActionPerformed
 
     private void Bt_CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Bt_CancelarActionPerformed
-
+    	try {
+			serverCommunicator.doLogoff();
+    	} catch (IOException io) {
+            UserMessageNotifier.infoMessagePane(this, io.getMessage());
+        } catch (IllegalArgumentException e) {
+        	UserMessageNotifier.infoMessagePane(this, e.getMessage());
+		}
     }//GEN-LAST:event_Bt_CancelarActionPerformed
 
-    public void realizaLogin(String usuario, String senha) {    	
+    private void realizaLogin(String usuario, String senha) {    	
         try {   
         	serverCommunicator.doLogin(usuario, senha);
             new Chat();
@@ -245,7 +251,11 @@ public class Login extends javax.swing.JFrame {
         } catch (IllegalArgumentException e) {
         	UserMessageNotifier.infoMessagePane(this, e.getMessage());
 		}
-        
+    }
+    
+    // Não é só a tela de login que deve fazer logoff, por isso esté método é público
+    public void realizaLogoff() {
+    	
     }
     
     /**
