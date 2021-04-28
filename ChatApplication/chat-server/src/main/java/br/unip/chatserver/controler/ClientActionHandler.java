@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import org.apache.commons.lang3.StringUtils;
 
 import br.unip.chatserver.model.ClientConnection;
+import br.unip.chatserver.model.Server;
 import br.unip.chatserver.model.clientactions.ClientActions;
 
 public final class ClientActionHandler extends ClientActions {
@@ -22,11 +23,11 @@ public final class ClientActionHandler extends ClientActions {
 	
 	public void clientListener() {
 		try {
-			InputStream inputStream = client.getClientSocket().getInputStream();
-			String line = new BufferedReader(new InputStreamReader(inputStream)).readLine();
+			String line = client.getBufferedReader().readLine();//new BufferedReader(new InputStreamReader(inputStream)).readLine();
 			String[] tokens = (line != null) ? StringUtils.split(line) : null;
 			if (tokens != null && tokens.length > 0) {
-				this.handleAction(tokens, line);
+				Server.notificaNoConsoleDoServidor(client.getClientSocket() + " enviou a requisição: " + line);
+				this.handleAction(tokens, line);				
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
