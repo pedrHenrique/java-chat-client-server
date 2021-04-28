@@ -5,17 +5,22 @@
  */
 package br.unip.chatclient.view;
 
+import br.unip.chatclient.model.ServerCommunication;
+
 /**
  *
  * @author Felipe
  */
 public class Cadastro extends javax.swing.JFrame {
+    
+    private Login loginForm;
+    
+    private ServerCommunication serverCommunicator;
 
-    /**
-     * Creates new form Cadastro
-     */
-    public Cadastro() {
+    public Cadastro(Login loginForm, ServerCommunication serverCommunicator) {
         initComponents();
+        this.loginForm = loginForm;
+        this.serverCommunicator = serverCommunicator;
     }
 
     /**
@@ -56,7 +61,7 @@ public class Cadastro extends javax.swing.JFrame {
 
         lbl_txt2.setFont(new java.awt.Font("Goudy Old Style", 1, 24)); // NOI18N
         lbl_txt2.setForeground(new java.awt.Color(255, 255, 255));
-        lbl_txt2.setText("… r·pido e muito f·cil.");
+        lbl_txt2.setText("√â r√°pido e muito f√°cil.");
 
         figura1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/unip/chatclient/view/img/novousuario.png"))); // NOI18N
 
@@ -64,7 +69,6 @@ public class Cadastro extends javax.swing.JFrame {
         lbl_nome.setText("Digite seu Nome:");
 
         jT_Nome.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jT_Nome.setText("Fulano de Tal");
         jT_Nome.setToolTipText("Digite seu nome Completo!");
 
         lbl_data.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
@@ -73,15 +77,14 @@ public class Cadastro extends javax.swing.JFrame {
         datadenasc.setColumns(1);
         datadenasc.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
         datadenasc.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        datadenasc.setText("03/03/2000");
+        datadenasc.setText("00/00/0000");
         datadenasc.setToolTipText("Preencha a data com as \"/\".");
 
         lbl_usuario.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
-        lbl_usuario.setText("Usu·rio:");
+        lbl_usuario.setText("Usu√°rio:");
 
         jT_Usuario.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jT_Usuario.setText("Tal_de_Fulano");
-        jT_Usuario.setToolTipText("Esse nome ser· utilizado para as proximas vezes que for entrer no sistema.");
+        jT_Usuario.setToolTipText("Esse nome ser√° utilizado para as proximas vezes que for entrer no sistema.");
 
         lbl_senha.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         lbl_senha.setText("Digite sua Senha:");
@@ -89,10 +92,8 @@ public class Cadastro extends javax.swing.JFrame {
         lbl_confirmsenha.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         lbl_confirmsenha.setText("Confirme a Senha:");
 
-        password_Senha.setText("Androidpythonjava");
         password_Senha.setToolTipText("");
 
-        password_Confirmsenha.setText("androidpythonjava");
         password_Confirmsenha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 password_ConfirmsenhaActionPerformed(evt);
@@ -235,8 +236,10 @@ public class Cadastro extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void Bt_CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Bt_CancelarActionPerformed
-        // TODO add your handling code here:
+    private void Bt_CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Bt_CancelarActionPerformed    	
+    	this.setEnabled(false);
+    	this.setVisible(false);
+    	this.loginForm.setCadastro(null);
     }//GEN-LAST:event_Bt_CancelarActionPerformed
 
     private void password_ConfirmsenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_password_ConfirmsenhaActionPerformed
@@ -277,7 +280,7 @@ public class Cadastro extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Cadastro().setVisible(true);
+                new Cadastro(null, null).setVisible(true);
             }
         });
     }

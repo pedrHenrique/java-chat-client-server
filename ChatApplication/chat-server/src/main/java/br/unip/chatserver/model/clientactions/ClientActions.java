@@ -32,7 +32,7 @@ public class ClientActions {
 		try {
 			client.getClientSocket().close();
 			Server.removeClientConnection(client);
-			Server.notificaNoConsoleDoServidor(client + " se desconectou do servidor.\n");
+			Server.notificaNoConsoleDoServidor(client + " se desconectou do servidor.");
 		} catch (IOException e) {
 			System.err.println("Não foi possível fechar o soquete " + client.getClientSocket() + ".\nMotivo: " + e.getStackTrace());
 			notificaClientViaOutput(client, "falha: Não foi possível fechar sua conexão com o servidor... Por favor, tente novamente uma outra vez.\n");

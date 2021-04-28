@@ -9,6 +9,9 @@ import br.unip.chatclient.model.ServerCommunication;
 import br.unip.chatclient.util.notifier.UserMessageNotifier;
 import java.io.IOException;
 
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 /**
  *
  * @author Felipe
@@ -16,16 +19,44 @@ import java.io.IOException;
 public class Login extends javax.swing.JFrame {
 	
 	ServerCommunication serverCommunicator;
+	
+	private Cadastro cadastro;
+	
+	public Cadastro getCadastro() {
+		return cadastro;
+	}
+	
+	public void setCadastro(Cadastro cadastro) {
+		this.cadastro = cadastro;
+	}
+	
+	public JTextField getjT_User() {
+		return jT_User;
+	}
+	
+	public void setjT_User(JTextField jT_User) {
+		this.jT_User = jT_User;
+	}
+	
+	public void setjP_Senha(JPanel jP_Senha) {
+		this.jP_Senha = jP_Senha;
+	}
+	
+	public JPanel getjP_Senha() {
+		return jP_Senha;
+	}
 
     public Login() {
         initComponents();
         this.setVisible(true);
+        this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); // TODO - Até descobrir como escolher customizar a forma de fechar o form. O botão de fechar vai ficar "desativado".
     }
     
     public Login(ServerCommunication sc) {
         initComponents();   
         this.setVisible(true);
         this.serverCommunicator = sc;
+        this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); // TODO - Até descobrir como escolher customizar a forma de fechar o form. O botão de fechar vai ficar "desativado".
     }
 
     /**
@@ -46,7 +77,7 @@ public class Login extends javax.swing.JFrame {
         jP_Senha = new javax.swing.JPanel();
         jL_IconSenha = new javax.swing.JLabel();
         jPassword_Senha = new javax.swing.JPasswordField();
-        Bt_Cancelar = new javax.swing.JButton();
+        Bt_Sair = new javax.swing.JButton();
         Bt_Entrar = new javax.swing.JButton();
         Bt_NewConta = new javax.swing.JButton();
         Bt_Esqueci_Senha = new javax.swing.JButton();
@@ -79,7 +110,7 @@ public class Login extends javax.swing.JFrame {
         );
 
         jL_Instrucao.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
-        jL_Instrucao.setText("Insira o usu�rio e a senha para entrar !");
+        jL_Instrucao.setText("Insira o usuário e a senha para entrar !");
 
         jP_User.setBackground(new java.awt.Color(255, 255, 255));
         jP_User.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -133,17 +164,17 @@ public class Login extends javax.swing.JFrame {
             .addComponent(jPassword_Senha)
         );
 
-        Bt_Cancelar.setBackground(new java.awt.Color(255, 0, 0));
-        Bt_Cancelar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        Bt_Cancelar.setForeground(new java.awt.Color(255, 255, 255));
-        Bt_Cancelar.setText("Cancelar");
-        Bt_Cancelar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        Bt_Cancelar.setContentAreaFilled(false);
-        Bt_Cancelar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        Bt_Cancelar.setOpaque(true);
-        Bt_Cancelar.addActionListener(new java.awt.event.ActionListener() {
+        Bt_Sair.setBackground(new java.awt.Color(255, 0, 0));
+        Bt_Sair.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        Bt_Sair.setForeground(new java.awt.Color(255, 255, 255));
+        Bt_Sair.setText("Sair");
+        Bt_Sair.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        Bt_Sair.setContentAreaFilled(false);
+        Bt_Sair.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        Bt_Sair.setOpaque(true);
+        Bt_Sair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Bt_CancelarActionPerformed(evt);
+                Bt_SairActionPerformed(evt);
             }
         });
 
@@ -163,9 +194,14 @@ public class Login extends javax.swing.JFrame {
 
         Bt_NewConta.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         Bt_NewConta.setForeground(new java.awt.Color(51, 0, 204));
-        Bt_NewConta.setText("N�o tem uma conta?");
+        Bt_NewConta.setText("Não tem uma conta?");
         Bt_NewConta.setBorderPainted(false);
         Bt_NewConta.setContentAreaFilled(false);
+        Bt_NewConta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Bt_NewContaActionPerformed(evt);
+            }
+        });
 
         Bt_Esqueci_Senha.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         Bt_Esqueci_Senha.setForeground(new java.awt.Color(51, 0, 204));
@@ -189,7 +225,7 @@ public class Login extends javax.swing.JFrame {
                         .addComponent(jP_Senha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jP_User, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
-                    .addComponent(Bt_Cancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(Bt_Sair, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(Bt_Entrar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(Bt_Esqueci_Senha)
@@ -214,7 +250,7 @@ public class Login extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(Bt_Entrar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(Bt_Cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Bt_Sair, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(42, Short.MAX_VALUE))
         );
 
@@ -231,15 +267,26 @@ public class Login extends javax.swing.JFrame {
         this.realizaLogin(usuario, senha);
     }//GEN-LAST:event_Bt_EntrarActionPerformed
 
-    private void Bt_CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Bt_CancelarActionPerformed
+    private void Bt_SairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Bt_SairActionPerformed
     	try {
+    		// TODO Debbugar
 			serverCommunicator.doLogoff();
     	} catch (IOException io) {
             UserMessageNotifier.infoMessagePane(this, io.getMessage());
         } catch (IllegalArgumentException e) {
         	UserMessageNotifier.infoMessagePane(this, e.getMessage());
+		} finally {
+			System.exit(0);
 		}
-    }//GEN-LAST:event_Bt_CancelarActionPerformed
+    }//GEN-LAST:event_Bt_SairActionPerformed
+
+    private void Bt_NewContaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Bt_NewContaActionPerformed
+        if (cadastro == null) {
+        	cadastro = new Cadastro(this, serverCommunicator);
+            cadastro.setVisible(true);
+        }
+        cadastro.setVisible(true);
+    }//GEN-LAST:event_Bt_NewContaActionPerformed
 
     private void realizaLogin(String usuario, String senha) {    	
         try {   
@@ -253,10 +300,6 @@ public class Login extends javax.swing.JFrame {
 		}
     }
     
-    // Não é só a tela de login que deve fazer logoff, por isso esté método é público
-    public void realizaLogoff() {
-    	
-    }
     
     /**
      * @param args the command line arguments
@@ -303,10 +346,10 @@ public class Login extends javax.swing.JFrame {
 	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Bt_Cancelar;
     private javax.swing.JButton Bt_Entrar;
     private javax.swing.JButton Bt_Esqueci_Senha;
     private javax.swing.JButton Bt_NewConta;
+    private javax.swing.JButton Bt_Sair;
     private javax.swing.JLabel jL_IconSenha;
     private javax.swing.JLabel jL_IconUser;
     private javax.swing.JLabel jL_Instrucao;

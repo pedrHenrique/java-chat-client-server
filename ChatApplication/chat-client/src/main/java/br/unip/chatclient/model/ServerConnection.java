@@ -36,17 +36,17 @@ public class ServerConnection {
 	public void connect() throws IOException {
 		try {
 			this.socket = new Socket(serverAddres, serverPort);
-			this.iniciaFerramentasDaConexao();
 		} catch (IOException e) {
-			throw new IOException("Não foi possível se conectar ao servidor.\nMotivo: " + e.getMessage() + ".");
+			throw new IOException("Não foi possível se conectar ao servidor no momento. Tente novamente mais tarde.");
 		}
+		this.iniciaFerramentasDaConexao();
 	}
 
 	private OutputStream iniciaOuputStream() throws IOException {
 		try {
 			return socket.getOutputStream();
 		} catch (IOException e) {
-			throw new IOException("Não foi possível iniciar o outputStream.nMotivo: " + e.getStackTrace() + ".");
+			throw new IOException("Não foi possível iniciar o outputStream.nMotivo: " + e.getStackTrace() + ".\n O Programa será encerrado!");			
 		}
 	}
 
@@ -54,7 +54,7 @@ public class ServerConnection {
 		try {
 			return socket.getInputStream();
 		} catch (IOException e) {
-			throw new IOException("Não foi possível iniciar o InputStream.\nMotivo: " + e.getStackTrace() + ".");
+			throw new IOException("Não foi possível iniciar o InputStream.\nMotivo: " + e.getStackTrace() + ".\n O Programa será encerrado!");
 		}
 	}
 

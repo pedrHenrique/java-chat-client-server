@@ -46,11 +46,15 @@ public final class ServerCommunication {
 		final String comandoLogoff = "logoff\n";
 		enviaComandoParaServer(comandoLogoff);
 		String resposta = retornaRespostaServidor();
-		if (resposta.contains(SUCESSO)) {
+		if (isRespostaEsperada(resposta)) {
 			connection.finalizaComunicacaoComServidor();
-			return;
+		} else {
+			throw new IllegalArgumentException(resposta);
 		}
-		throw new IOException(resposta);
+	}
+
+	private boolean isRespostaEsperada(String resposta) {
+		return resposta.contains(SUCESSO) || resposta.isEmpty();
 	}
 
 	// Lendo o retorno da requisição
