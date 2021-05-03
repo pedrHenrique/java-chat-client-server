@@ -73,25 +73,30 @@ public class ServerConnection {
 	public OutputStream getServerOut() {
 		return serverOut;
 	}
-
-	public ServerCommunication retornaComunicadorComServidor(ServerConnection conexao) {
-		return new ServerCommunication(conexao);
+	
+	public Socket getSocket() {
+		return socket;
 	}
 
+	public ServerCommunication retornaComunicadorComServidor() {
+		return new ServerCommunication(this);
+	}
+
+	//TODO Se a comunicação já tiver sido fechada, ele cai na exception 
 	/**
 	 * Finaliza comunicacao com servidor.
 	 *
 	 * @param conexao - A conexão que será fechada.
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public void finalizaComunicacaoComServidor() throws IOException {
+	public void finalizaComunicacaoComServidor() {
 		try {
 			this.socket.close();
 			this.serverIn = null;
 			this.serverOut = null;
 			this.bufferedIn = null;
 		} catch (Exception e) {
-			throw new IOException("Não foi possível a comunicação do cliente com a do servidor.\nMotivo: " + e.getMessage());
+			System.exit(0);
 		}
 	}
 	

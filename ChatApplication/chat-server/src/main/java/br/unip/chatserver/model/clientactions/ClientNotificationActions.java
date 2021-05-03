@@ -43,13 +43,18 @@ public class ClientNotificationActions {
 	 * @param client - O cliente que irá receber a lista de usuários online.
 	 */
 	public static void exibeUsuariosOnlineParaCliente(ClientConnection client) {
-		notificaClientViaOutput(client, "Lista de usuários online.\n");
+		StringBuilder listaUsuarios = new StringBuilder();
 		for (ClientConnection cl : Server.getClientList()) {
 			if (clienteNaoForORemetente(client, cl) && cl.isUserLogado()) {
-				enviaMensagem(client, cl.getUser().getLogin() + "\n", client);
+				listaUsuarios.append(cl.getUser().getLogin() + ",");
 			}
 		}
-	}	
+		if (listaUsuarios.toString() != "") {
+			enviaMensagem(client, listaUsuarios.toString() + "\n", client);
+		} else {
+			enviaMensagem(client, "\n", client);
+		}
+	}
 
 	/**
 	 * Envia uma mensagem para o console do cliente.<p>
@@ -95,10 +100,10 @@ public class ClientNotificationActions {
 	 * @param mensagem - A mensagem.
 	 * @param clientDestinatario - O Cliente que receberá a mensagem.
 	 */
-	public static void enviaChatMensagem(@Valid ChatMessage mensagem) {
+	public static void enviaChatMensagem(ClientConnection destinatario, @Valid ChatMessage mensagem) {
 		// TODO Validar Mensagem
-		ClientConnection clientDestinatario = retornaClienteComUsuarioInformado(mensagem.getDestinatario().getLogin());
-		notificaClientViaOutput(clientDestinatario, mensagem.toString());
+		//ClientConnection clientDestinatario = retornaClienteComUsuarioInformado(mensagem.getDestinatario().getLogin());
+		notificaClientViaOutput(destinatario, mensagem.toString());
 	}
 
 }

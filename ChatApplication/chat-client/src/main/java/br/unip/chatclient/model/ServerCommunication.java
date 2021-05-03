@@ -2,56 +2,92 @@ package br.unip.chatclient.model;
 
 import java.io.IOException;
 
-import br.unip.chatclient.util.notifier.UserMessageNotifier;
+import org.apache.commons.lang3.StringUtils;
 
 /**
- * The Class ServerCommunication.
+ *
+ * Classe com o intuito de mediar a comunicação entre um Chat Conectado e o
+ * Servidor em si.<p> 
  * 
- * <p>Classe com o intuito de mediar a comunicação entre um Chat Conectado 
- * e o Servidor em si.
+ * A conversa com o servidor foi inicialmente pensada em ser feita <i>manualmente</i>.<br>
+ * Exemplo: Sempre que eu fazer uma requisição, eu devo obter a requisição esperada que eu solicitei.<p>
+ * <b>Problema:</b><br>
+ * Existem eventos que não são esperados... Exemplo: Login de um usuário ou uma mensagem recebida. 
+ * Então o envio e aguardo de requisições manuais não é funcional nesse exemplo.<p>
  * 
- * Melhorar essa documentação
+ * Com base nisso foi criada a classe {@link ServerListener}
+ * 
  */
-public final class ServerCommunication {	
+public final class ServerCommunication {
 
-	/** Para se comunicar com um servidor, é necessário possuir uma conexão ativa com o mesmo **/
+	/**
+	 * Para se comunicar com um servidor, é necessário possuir uma conexão ativa com
+	 * o mesmo
+	 **/
 	private final ServerConnection connection;
-	
+
 	private static final String SUCESSO = "sucesso";
-	
+
 	private static final String FALHA = "falha";
-	
-	// serverResponse
-	
+
 	public ServerCommunication(ServerConnection connection) {
 		this.connection = connection;
 	}
-	
-	public void doLogin(String usuario, String senha) throws IOException, IllegalArgumentException {				
-		// Validar a conexão.
-		this.validaComunicacaoComServidor();		
+
+	public void doLogin(String usuario, String senha) throws IOException, IllegalArgumentException {
+		this.validaComunicacaoComServidor();
 		final String comandoLogin = "login ";
 		String comando = comandoLogin + usuario + " " + senha + "\n";
 		enviaComandoParaServer(comando);
 		String resposta = retornaRespostaServidor();
-        if (resposta.contains(SUCESSO)) {
-        	//
-        } else {
-        	throw new IllegalArgumentException(resposta);
-        }
+		if (!resposta.contains(SUCESSO)) {
+			throw new IllegalArgumentException(resposta);
+		}
 	}
-	
-	public void doLogoff() throws IOException, IllegalArgumentException {
+
+	public String retornaUsuario() throws IOException {
+		enviaComandoParaServer("user\n");
+		String resposta = retornaRespostaServidor();
+		if (resposta.contains(FALHA)) {
+			throw new IOException(resposta);
+		}
+		return resposta;
+	}
+
+	public void doLogoff() throws IOException {
 		this.validaComunicacaoComServidor();
 		final String comandoLogoff = "logoff\n";
 		enviaComandoParaServer(comandoLogoff);
 		String resposta = retornaRespostaServidor();
 		if (isRespostaEsperada(resposta)) {
 			connection.finalizaComunicacaoComServidor();
+			this.user = null;
 		} else {
-			throw new IllegalArgumentException(resposta);
+			throw new IOException(resposta);
 		}
 	}
+
+	public void doMensagem(String destinatario, String mensagem) throws IOException {
+		this.validaComunicacaoComServidor();
+		final String comandoMensagem = "msg";
+		String comando = String.valueOf(comandoMensagem + " " + destinatario + " " + mensagem + "\n");
+		enviaComandoParaServer(comando);
+		// Desativado. A Thread que está escutando o servidor que deve cuidar da resposta do mesmo
+		
+		//String resposta = retornaRespostaServidor();
+		//if (resposta.contains(FALHA)) {
+		//	throw new IllegalArgumentException(resposta);
+		//}
+	}
+
+//	private void handleMessage(String[] tokensMsg) {
+//        String login = tokensMsg[1];
+//        String msgBody = tokensMsg[2];
+//
+//        for(MessageListener listener : messageListeners) {
+//            listener.onMessage(login, msgBody);
+//        }
+//    }
 
 	private boolean isRespostaEsperada(String resposta) {
 		return resposta.contains(SUCESSO) || resposta.isEmpty();
@@ -61,11 +97,12 @@ public final class ServerCommunication {
 	private String retornaRespostaServidor() throws IOException {
 		try {
 			// O servidor nem sempre retorna alguma mensagem quando uma solicitação é feita.
-			// Se a reposta for nula, retorna um simples vázio para evitar um NullPointerException
+			// Se a reposta for nula, retorna um simples vázio para evitar um
+			// NullPointerException
 			String resposta = connection.getBufferedIn().readLine();
 			return (resposta != null) ? resposta : "";
-		} catch (IOException e) {			
-			throw new IOException("Não foi possível ler a resposta do servidor!!\nMotivo: " + e.getCause()); 
+		} catch (IOException e) {
+			throw new IOException("Não foi possível ler a resposta do servidor!!\nMotivo: " + e.getCause());
 		}
 	}
 
@@ -74,13 +111,14 @@ public final class ServerCommunication {
 		try {
 			connection.getServerOut().write(comando.getBytes());
 		} catch (Exception e) {
-			throw new IOException("Não foi possível enviar uma requisição do servidor!!\nMotivo: " + e.getCause()); 
-		}		
+			throw new IOException("Não foi possível enviar uma requisição do servidor!!\nMotivo: " + e.getCause());
+		}
 	}
 
 	private void validaComunicacaoComServidor() throws IOException {
 		if (!connection.isConexaoComServidorEstabelecida()) {
-			throw new IOException("Não foi possível realizar a solicitação para o Servidor. Você não está conectado no momento.\n");
+			throw new IOException(
+					"Não foi possível realizar a solicitação para o Servidor. Você não está conectado no momento.\n");
 		}
 	}
 
@@ -117,7 +155,29 @@ public final class ServerCommunication {
 		}
 		return true;
 	}
-	
-	
+
+	// Testes com a lista de usuários Online //
+
+	private String user;
+
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	public String returnUserList() throws IOException, IllegalArgumentException {
+		this.validaComunicacaoComServidor();
+		final String comandoLogoff = "userlist\n";
+		enviaComandoParaServer(comandoLogoff);
+		String resposta = retornaRespostaServidor();
+		if (resposta.equals("")) {
+			return StringUtils.EMPTY;
+		} else {
+			return resposta;
+		}
+	}
 
 }

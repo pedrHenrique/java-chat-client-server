@@ -15,10 +15,12 @@ public class ChatClientRun {
 
 	public static void main(String[] args) {
 		Login login = new Login();
+		ServerConnection serverConnection;
 		try {
-			ServerConnection serverConnection = new ServerConnection(SERVERADRESS, SERVERPORT);
+			serverConnection = new ServerConnection(SERVERADRESS, SERVERPORT);
 			serverConnection.connect();
-			ServerCommunication comunicador = serverConnection.retornaComunicadorComServidor(serverConnection);
+			ServerCommunication comunicador = serverConnection.retornaComunicadorComServidor();
+			login.setVisible(true);
 			login.setServerCommunicator(comunicador);
 		} catch (IOException e) {
 			UserMessageNotifier.errorMessagePane(login, e.getMessage());

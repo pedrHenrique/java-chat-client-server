@@ -12,10 +12,6 @@ import java.io.IOException;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-/**
- *
- * @author Felipe
- */
 public class Login extends javax.swing.JFrame {
 	
 	ServerCommunication serverCommunicator;
@@ -48,13 +44,11 @@ public class Login extends javax.swing.JFrame {
 
     public Login() {
         initComponents();
-        this.setVisible(true);
         this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); // TODO - Até descobrir como escolher customizar a forma de fechar o form. O botão de fechar vai ficar "desativado".
     }
     
     public Login(ServerCommunication sc) {
-        initComponents();   
-        this.setVisible(true);
+        initComponents();
         this.serverCommunicator = sc;
         this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); // TODO - Até descobrir como escolher customizar a forma de fechar o form. O botão de fechar vai ficar "desativado".
     }
@@ -291,11 +285,13 @@ public class Login extends javax.swing.JFrame {
     private void realizaLogin(String usuario, String senha) {    	
         try {   
         	serverCommunicator.doLogin(usuario, senha);
-            new Chat();
-        	this.dispose();
+        	new Chat(serverCommunicator);
+            this.dispose();
         } catch (IOException io) {
+        	// Problemas de Conexão!!
             UserMessageNotifier.infoMessagePane(this, io.getMessage());
         } catch (IllegalArgumentException e) {
+        	// Usuário preencheu algo errado!
         	UserMessageNotifier.infoMessagePane(this, e.getMessage());
 		}
     }

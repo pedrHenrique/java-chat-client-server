@@ -22,9 +22,9 @@ public class ClientActions {
 	}
 
 	public static void handleLogoff(ClientConnection client) {
-		if (client.isUserLogado()) {
-			notificaTodosOsUsuarios(client, client.getUser().getLogin() + " ficou offline.\n");
-		}
+//		if (client.isUserLogado()) {
+//			notificaTodosOsUsuarios(client, client.getUser().getLogin() + " ficou offline.\n");
+//		}
 		finalizaClientSocket(client);
 	}
 
@@ -41,10 +41,10 @@ public class ClientActions {
 	
 	public static Usuario showUser(ClientConnection client) {
 		if (client.isUserLogado()) {
-			notificaClientViaOutput(client, "Eu sou o usuário(a): " + client.getUser().getLogin() + "\n");
+			notificaClientViaOutput(client, client.getUser().getLogin() + "\n");
 			return client.getUser();
 		}
-		notificaClientViaOutput(client, "Você não está logado no momento!\n");
+		notificaClientViaOutput(client, "Falha. Você não está logado no momento!\n");
 		return null;
 	}
 	
@@ -76,14 +76,14 @@ public class ClientActions {
 		if (!clientRemetente.isUserLogado()) {
 			notificaClientViaOutput(clientRemetente, "Você precisa estar logado para enviar alguma mensagem.\n");
 			return;
-		}		
+		}
 		String[] tokens = validaTokenMensagem(linha);		
 		if (tokens != null) {
 			String destinatario = tokens[1];
 			String mensagem = tokens[2];
 			notificaUsuario(clientRemetente, destinatario, mensagem);
 		} else {
-			notificaClientViaOutput(clientRemetente, "Ops, a forma como você deseja enviar uma mensagem não pode ser aceita.\n");
+			notificaClientViaOutput(clientRemetente, "Falha, a forma como você deseja enviar uma mensagem não pode ser aceita.\n");
 		}
 	}
 

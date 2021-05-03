@@ -16,8 +16,8 @@ public final class ClientLoginActions {
 	
 	protected static void notificacoesPosClienteLogado(ClientConnection client, Usuario usuario) {
 		notificaClientViaOutput(client, "Login realizado com sucesso!\n");
-		exibeUsuariosOnlineParaCliente(client);
-		notificaTodosOsUsuarios(client, client.getUser().getLogin() + " ficou online.\n");
+		//exibeUsuariosOnlineParaCliente(client);
+		notificaTodosOsUsuarios(client, "online " + client.getUser().getLogin() + "\n");
 		Server.notificaNoConsoleDoServidor("Login do usuário: " + usuario.toString());
 	}
 

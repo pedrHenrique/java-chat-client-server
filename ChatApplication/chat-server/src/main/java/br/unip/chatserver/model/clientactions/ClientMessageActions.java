@@ -28,19 +28,22 @@ public final class ClientMessageActions {
 	}
 
 	protected static void notificaUsuario(ClientConnection clientRemetente, String destinatario, String mensagem) {
-		if (clientRemetente.getUser().getLogin().equalsIgnoreCase(destinatario)) {
-			notificaClientViaOutput(clientRemetente, "Porquê você estaria tentando enviar uma mensagem para você mesmo?\n");
+		if (usuarioEstaTentandoEnviarUmaMensagemPraEleMesmo(clientRemetente, destinatario)) {
+			notificaClientViaOutput(clientRemetente, "Falha. Porquê você estaria tentando enviar uma mensagem para você mesmo?\n");
 			return;
 		}
 		ClientConnection clientDestinatario = retornaClienteComUsuarioInformado(destinatario);
-		if (clientDestinatario != null) {				
-			//String mensagem = formataMensagemChat(clientRemetente, mensagem);
-			//enviaMensagem(clientRemetente, mensagem , clientDestinatario);
+		if (clientDestinatario != null) {
 			ChatMessage chatMensagem = new ChatMessage(clientRemetente.getUser(), mensagem, clientDestinatario.getUser());
-			enviaChatMensagem(chatMensagem);
+			enviaChatMensagem(clientDestinatario, chatMensagem);
 			return;
 		}
-		notificaClientViaOutput(clientRemetente, "Não foi possível encontrar o usuário " + destinatario + ".\n");
+		notificaClientViaOutput(clientRemetente, "Falha. Não foi possível encontrar o usuário " + destinatario + ".\n");
+	}
+
+	private static boolean usuarioEstaTentandoEnviarUmaMensagemPraEleMesmo(ClientConnection clientRemetente,
+			String destinatario) {
+		return clientRemetente.getUser().getLogin().equalsIgnoreCase(destinatario);
 	}	
 	
 	protected static String formataMensagemChat(ClientConnection remetente, String mensagem) {
