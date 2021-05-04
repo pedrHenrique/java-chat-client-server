@@ -1,4 +1,4 @@
-package br.unip.chatclient.configure;
+package br.unip.chatclient.controler;
 
 import java.io.IOException;
 

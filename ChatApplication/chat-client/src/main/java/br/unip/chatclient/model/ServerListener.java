@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import org.apache.commons.lang3.StringUtils;
 
+import br.unip.chatclient.view.Chat;
+
 /**
  * ServerListener - A ideia é escutar e tratar, <b>todo tipo de informação enviada automaticamente pelo servidor</b>.<br>
  * E claro, aplicar as devidas ações tratadas no Chat correspondente!.<p>
@@ -25,10 +27,12 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class ServerListener extends Thread {
 
-	/** The connection. */
 	private ServerConnection connection;
+	
+	private Chat chat;
 
-	public ServerListener(ServerConnection connection) {
+	public ServerListener(Chat chat, ServerConnection connection) {
+		this.chat = chat;
 		this.connection = connection;
 	}
 
@@ -41,12 +45,15 @@ public class ServerListener extends Thread {
 				String[] tokens = StringUtils.split(line);
 				if (tokens != null && tokens.length > 0) {
 					System.out.println(line);
-//                    String cmd = tokens[0];
-//                    if ("online".equalsIgnoreCase(cmd)) {
-//                        //handleOnline(tokens);
-//                    } else if ("offline".equalsIgnoreCase(cmd)) {
-//                        //handleOffline(tokens);
-//                    } else if ("msg".equalsIgnoreCase(cmd)) {
+                    String cmd = tokens[0];
+                    if ("online".equalsIgnoreCase(cmd)) {
+                        chat.onlineUser(tokens[1]);
+                    } else if ("offline".equalsIgnoreCase(cmd)) {
+                    	chat.offlineUser(tokens[1]);
+                    } else {
+                    	System.out.println("Comando não reconhecido recebido!");
+                    }
+//						  else if ("msg".equalsIgnoreCase(cmd)) {
 //                        String[] tokensMsg = StringUtils.split(line, null, 3);
 //                        handleMessage(tokensMsg);
 //                    }

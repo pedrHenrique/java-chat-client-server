@@ -22,9 +22,9 @@ public class ClientActions {
 	}
 
 	public static void handleLogoff(ClientConnection client) {
-//		if (client.isUserLogado()) {
-//			notificaTodosOsUsuarios(client, client.getUser().getLogin() + " ficou offline.\n");
-//		}
+		if (client.isUserLogado()) {
+			notificaTodosOsUsuarios(client, "offline " + client.getUser().getLogin() + "\n");
+		}
 		finalizaClientSocket(client);
 	}
 

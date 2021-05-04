@@ -6,6 +6,7 @@
 package br.unip.chatclient.view;
 
 import br.unip.chatclient.model.ServerCommunication;
+import br.unip.chatclient.model.ServerEvents;
 import br.unip.chatclient.model.ServerListener;
 import br.unip.chatclient.util.notifier.UserMessageNotifier;
 
@@ -21,10 +22,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
 
-import org.apache.commons.lang3.StringUtils;
-
-public class Chat extends JFrame {
+public class Chat extends JFrame implements ServerEvents{
 
 	/*
 	 * Basicamente o que temos agora!!
@@ -43,6 +43,11 @@ public class Chat extends JFrame {
 	private ServerCommunication serverCommunication;
 
 	private String usuario;
+	
+	private DefaultListModel<String> listUserModule;
+	
+	// Para adicionar elementos na lista de mensagem. Nome destaVariavel.addElement(StringQualquer)
+	private DefaultListModel<String> listChatMessageModule;
 
 	public Chat(ServerCommunication serverCommunication) throws IOException {
 		initComponents();
@@ -54,7 +59,7 @@ public class Chat extends JFrame {
 															// fechar o form. O botão de fechar vai ficar "desativado".
 		this.paneMensagemArea.setVisible(false);
 		this.setVisible(true);
-		new ServerListener(serverCommunication.getConnection()).start();
+		new ServerListener(this, serverCommunication.getConnection()).start();
 	}
 
 	private void defineUsuarioNaTela() {
@@ -69,12 +74,10 @@ public class Chat extends JFrame {
 			UserMessageNotifier.errorMessagePane(this, "Não foi possível atualizar a lista de usuários online...\nMotivo: " + e.getMessage());
 			return;
 		}
-		final DefaultListModel<String> model = new DefaultListModel<>();
 		List<String> listUsuariosOnline = Arrays.asList(userList.split(","));
 		for (String usuario : listUsuariosOnline) {
-			model.addElement(usuario);
+			listUserModule.addElement(usuario);
 		}
-		this.jUserList.setModel(model);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -83,7 +86,8 @@ public class Chat extends JFrame {
     private void initComponents() {
 
         jUserScrollPane = new javax.swing.JScrollPane();
-        jUserList = new javax.swing.JList<>();
+        listUserModule = new DefaultListModel<String>();
+        jUserList = new javax.swing.JList<>(listUserModule);
         paneBottomArea = new javax.swing.JPanel();
         txtMensagem = new javax.swing.JTextField();
         btEnviar = new javax.swing.JButton();
@@ -94,7 +98,8 @@ public class Chat extends JFrame {
         lblNomeUsuario = new javax.swing.JLabel();
         paneMensagemArea = new javax.swing.JPanel();
         jMessageScrollPane = new javax.swing.JScrollPane();
-        jMessagesList = new javax.swing.JList<>();
+        listChatMessageModule = new DefaultListModel<String>();
+        jMessagesList = new javax.swing.JList<>(listChatMessageModule);
         lblConversandoCom = new javax.swing.JLabel();
         lblDestinatario = new javax.swing.JLabel();
 
@@ -290,15 +295,17 @@ public class Chat extends JFrame {
 	}// GEN-LAST:event_btnRecarregarActionPerformed
 
 	private void btEnviarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btEnviarActionPerformed
-		DefaultListModel<String> listModel = new DefaultListModel<String>();
-		jMessagesList = new JList<String>(listModel);
 		try {
+			// Envia requisição para o server
 			String destinatario = getLblDestinatario().getText();
-			String mensage = getTxtMensagem().getText();
-			serverCommunication.doMensagem(destinatario, mensage);
-			listModel.addElement(mensage);
-			jMessagesList.setModel(listModel);
-			getTxtMensagem().setText("");
+			String mensagem = txtMensagem.getText();
+			serverCommunication.doMensagem(destinatario, mensagem);
+			
+			// Adicionando a mensagem na tela
+			listChatMessageModule.addElement(mensagem);
+			
+			// Limpando o txt mensagem
+			txtMensagem.setText("");
 		} catch (IOException e) {
 			UserMessageNotifier.errorMessagePane(this, "Não foi possível enviar a mensagem para o usuário "
 					+ getLblDestinatario().getText() + "\nMotivo: " + e.getMessage());
@@ -380,4 +387,22 @@ public class Chat extends JFrame {
     private javax.swing.JPanel paneTopArea;
     private javax.swing.JTextField txtMensagem;
     // End of variables declaration//GEN-END:variables
+
+	@Override
+	public void onlineUser(String usuario) {
+		listUserModule.addElement(usuario);
+	}
+
+	@Override
+	public void offlineUser(String usuario) {
+		listUserModule.removeElement(usuario);
+	}
+	
+	public ServerCommunication getServerCommunication() {
+		return serverCommunication;
+	}
+	
+	public void setServerCommunication(ServerCommunication serverCommunication) {
+		this.serverCommunication = serverCommunication;
+	}
 }
