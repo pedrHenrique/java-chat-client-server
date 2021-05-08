@@ -35,7 +35,4 @@ public final class ActionsUtil {
 		}
 		return true;
 	}
-	
-	
-
 }

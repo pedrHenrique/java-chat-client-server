@@ -97,13 +97,12 @@ public class ClientNotificationActions {
 	 * Caso contrário ele quem receberá uma mensagem o informando que o mesmo precisa estar logado.
 	 * 
 	 * @param clientRemetente - O Cliente que enviou a mensagem.
-	 * @param mensagem - A mensagem.
+	 * @param chatMensagem - A mensagem.
 	 * @param clientDestinatario - O Cliente que receberá a mensagem.
 	 */
-	public static void enviaChatMensagem(ClientConnection destinatario, @Valid ChatMessage mensagem) {
+	public static void enviaChatMensagem(ClientConnection destinatario, @Valid ChatMessage chatMensagem) {
 		// TODO Validar Mensagem
-		//ClientConnection clientDestinatario = retornaClienteComUsuarioInformado(mensagem.getDestinatario().getLogin());
-		notificaClientViaOutput(destinatario, mensagem.toString());
+		notificaClientViaOutput(destinatario, chatMensagem.toString());
 	}
 
 }

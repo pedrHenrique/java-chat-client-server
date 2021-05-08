@@ -1,5 +1,7 @@
 package br.unip.chatserver.model;
 
+import static br.unip.chatserver.model.ServerCommands.ACCEPT_MESSAGE_FROM_COMMAND;
+
 import java.sql.Timestamp;
 
 import javax.validation.Valid;
@@ -9,29 +11,33 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class ChatMessage {
-	
+
+	private final String rotuloPadraoMensagem;
+
 	@Valid
 	private Usuario remetente;
-	
+
 	@Valid
 	private Usuario destinatario;
-	
+
 	@NotNull
 	private Timestamp data;
-	
+
 	@NotNull
 	private String mensagem;
-	
+
 	public ChatMessage(@Valid Usuario remetente, Timestamp data, String mensagem, @Valid Usuario destinatario) {
+		this.rotuloPadraoMensagem = "acceptFrom " + remetente.getLogin();
 		this.remetente = remetente;
 		this.data = data;
 		this.mensagem = mensagem;
 		this.destinatario = destinatario;
 	}
-	
+
 	public ChatMessage(@Valid Usuario remetente, String mensagem, @Valid Usuario destinatario) {
+		this.rotuloPadraoMensagem = ACCEPT_MESSAGE_FROM_COMMAND + " " + remetente.getLogin();
 		this.remetente = remetente;
-		this.data = new Timestamp(System.currentTimeMillis());//DateTime.now();
+		this.data = new Timestamp(System.currentTimeMillis());// DateTime.now();
 		this.mensagem = mensagem;
 		this.destinatario = destinatario;
 	}
@@ -67,7 +73,7 @@ public class ChatMessage {
 	public void setMensagem(String mensagem) {
 		this.mensagem = mensagem;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -122,12 +128,15 @@ public class ChatMessage {
 		return true;
 	}
 
-	// TODO No futuro, melhorar a visualização da hora na mensagem. Forma atual não exibe corretamente os '00'
+	// TODO No futuro, melhorar a visualização da hora na mensagem. Forma atual não
+	// exibe corretamente os '00'
 	@Override
-    public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE)
-        		.append(data.toLocalDateTime().getHour() + ":" + data.toLocalDateTime().getMinute() + " - " + 
-        				remetente.getLogin() + ": " + mensagem + "\n").toString();
-    }	
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE)
+				.append(rotuloPadraoMensagem + " " + 
+						data.toLocalDateTime().getHour() + ":" + data.toLocalDateTime().getMinute() + " - " +
+						remetente.getLogin() + ": " + mensagem + "\n")
+				.toString();
+	}
 
 }

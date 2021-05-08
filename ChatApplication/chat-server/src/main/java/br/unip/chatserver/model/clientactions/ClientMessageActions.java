@@ -38,11 +38,10 @@ public final class ClientMessageActions {
 			enviaChatMensagem(clientDestinatario, chatMensagem);
 			return;
 		}
-		notificaClientViaOutput(clientRemetente, "Falha. Não foi possível encontrar o usuário " + destinatario + ".\n");
+		notificaClientViaOutput(clientRemetente, "Falha. O usuário " + destinatario + " não está online no momento.\n");
 	}
 
-	private static boolean usuarioEstaTentandoEnviarUmaMensagemPraEleMesmo(ClientConnection clientRemetente,
-			String destinatario) {
+	private static boolean usuarioEstaTentandoEnviarUmaMensagemPraEleMesmo(ClientConnection clientRemetente, String destinatario) {
 		return clientRemetente.getUser().getLogin().equalsIgnoreCase(destinatario);
 	}	
 	
