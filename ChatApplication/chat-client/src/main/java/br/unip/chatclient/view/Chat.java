@@ -10,7 +10,6 @@ import br.unip.chatclient.model.server.ServerCommunication;
 import br.unip.chatclient.model.server.ServerEvents;
 import br.unip.chatclient.util.notifier.UserMessageNotifier;
 
-import br.unip.chatclient.util.CellRenderer;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.Arrays;
