@@ -1,9 +1,10 @@
-package br.unip.chatclient.model;
+package br.unip.chatclient.controler;
 
 import java.io.IOException;
 
 import org.apache.commons.lang3.StringUtils;
 
+import br.unip.chatclient.model.server.ServerConnection;
 import br.unip.chatclient.view.Chat;
 
 /**
@@ -46,10 +47,13 @@ public class ServerListener extends Thread {
 				if (tokens != null && tokens.length > 0) {
 					System.out.println(line);
                     String cmd = tokens[0];
-                    if ("online".equalsIgnoreCase(cmd)) {
+                    if (cmd.equalsIgnoreCase("online")) {
                         chat.onlineUser(tokens[1]);
-                    } else if ("offline".equalsIgnoreCase(cmd)) {
+                    } else if (cmd.equalsIgnoreCase("offline")) {
                     	chat.offlineUser(tokens[1]);
+                    } else if (cmd.equalsIgnoreCase("acceptFrom")) {
+                    	String[] split = StringUtils.split(line, null, 3);
+                    	chat.messageReceved(split[1], split[2]);
                     } else {
                     	System.out.println("Comando não reconhecido recebido!");
                     }

@@ -1,4 +1,4 @@
-package br.unip.chatclient.model;
+package br.unip.chatclient.model.server;
 
 import java.io.BufferedReader;
 import java.io.IOException;

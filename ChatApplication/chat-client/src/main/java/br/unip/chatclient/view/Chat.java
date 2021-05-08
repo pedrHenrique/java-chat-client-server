@@ -5,26 +5,26 @@
  */
 package br.unip.chatclient.view;
 
-import br.unip.chatclient.model.ServerCommunication;
-import br.unip.chatclient.model.ServerEvents;
-import br.unip.chatclient.model.ServerListener;
+import br.unip.chatclient.controler.ServerListener;
+import br.unip.chatclient.model.server.ServerCommunication;
+import br.unip.chatclient.model.server.ServerEvents;
 import br.unip.chatclient.util.notifier.UserMessageNotifier;
 
+import br.unip.chatclient.util.CellRenderer;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JTextField;
-import javax.swing.ListModel;
 
 public class Chat extends JFrame implements ServerEvents{
+
+	private static final String CARACTER_NOTIFICADOR = " +";
 
 	/*
 	 * Basicamente o que temos agora!!
@@ -44,22 +44,30 @@ public class Chat extends JFrame implements ServerEvents{
 
 	private String usuario;
 	
-	private DefaultListModel<String> listUserModule;
-	
 	// Para adicionar elementos na lista de mensagem. Nome destaVariavel.addElement(StringQualquer)
-	private DefaultListModel<String> listChatMessageModule;
+	private DefaultListModel<String> listUserModule = new DefaultListModel<>();
+
+	private DefaultListModel<String> listChatMessageModule = new DefaultListModel<>();
 
 	public Chat(ServerCommunication serverCommunication) throws IOException {
-		initComponents();
 		this.serverCommunication = serverCommunication;
+		this.initComponents();
+		this.realizaSolicitacoesInicias();
+		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); // TODO - Até descobrir como escolher customizar a forma de fechar o form. O botão de fechar vai ficar "desativado".
+		this.setVisible(true);
+		this.paneMensagemArea.setVisible(false);
+		this.lblDestinatario.setText("");
+		new ServerListener(this, serverCommunication.getConnection()).start();
+	}
+	
+	public Chat() {
+		this.initComponents();
+	}
+	
+	private void realizaSolicitacoesInicias() throws IOException {
 		this.usuario = serverCommunication.retornaUsuario();
 		this.defineUsuarioNaTela();
 		this.preencheUserList(serverCommunication);
-		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); // TODO - Até descobrir como escolher customizar a forma de
-															// fechar o form. O botão de fechar vai ficar "desativado".
-		this.paneMensagemArea.setVisible(false);
-		this.setVisible(true);
-		new ServerListener(this, serverCommunication.getConnection()).start();
 	}
 
 	private void defineUsuarioNaTela() {
@@ -76,6 +84,7 @@ public class Chat extends JFrame implements ServerEvents{
 		}
 		List<String> listUsuariosOnline = Arrays.asList(userList.split(","));
 		for (String usuario : listUsuariosOnline) {
+			System.out.println("Estou conseguindo adicionar o Usuário? " + usuario);
 			listUserModule.addElement(usuario);
 		}
 	}
@@ -84,31 +93,28 @@ public class Chat extends JFrame implements ServerEvents{
 	// <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-
         jUserScrollPane = new javax.swing.JScrollPane();
-        listUserModule = new DefaultListModel<String>();
         jUserList = new javax.swing.JList<>(listUserModule);
         paneBottomArea = new javax.swing.JPanel();
         txtMensagem = new javax.swing.JTextField();
         btEnviar = new javax.swing.JButton();
-        btnRecarregar = new javax.swing.JButton();
         paneTopArea = new javax.swing.JPanel();
         btSair = new javax.swing.JButton();
         lblOla = new javax.swing.JLabel();
         lblNomeUsuario = new javax.swing.JLabel();
         paneMensagemArea = new javax.swing.JPanel();
         jMessageScrollPane = new javax.swing.JScrollPane();
-        listChatMessageModule = new DefaultListModel<String>();
         jMessagesList = new javax.swing.JList<>(listChatMessageModule);
         lblConversandoCom = new javax.swing.JLabel();
         lblDestinatario = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(102, 102, 102));
 
         jUserList.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         jUserList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-            	aoSelecionarUmUsuario(evt);
+                jUserListMouseClicked(evt);
             }
         });
         jUserScrollPane.setViewportView(jUserList);
@@ -131,7 +137,7 @@ public class Chat extends JFrame implements ServerEvents{
             paneBottomAreaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(paneBottomAreaLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(txtMensagem, javax.swing.GroupLayout.DEFAULT_SIZE, 445, Short.MAX_VALUE)
+                .addComponent(txtMensagem, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(btEnviar)
                 .addContainerGap())
@@ -145,13 +151,6 @@ public class Chat extends JFrame implements ServerEvents{
                     .addComponent(btEnviar))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
-
-        btnRecarregar.setText("Recarregar");
-        btnRecarregar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRecarregarActionPerformed(evt);
-            }
-        });
 
         paneTopArea.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -208,13 +207,12 @@ public class Chat extends JFrame implements ServerEvents{
             .addGroup(paneMensagemAreaLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(paneMensagemAreaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jMessageScrollPane)
                     .addGroup(paneMensagemAreaLayout.createSequentialGroup()
                         .addComponent(lblConversandoCom)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblDestinatario)
-                        .addGap(0, 434, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jMessageScrollPane, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
         paneMensagemAreaLayout.setVerticalGroup(
             paneMensagemAreaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -224,7 +222,8 @@ public class Chat extends JFrame implements ServerEvents{
                     .addComponent(lblConversandoCom)
                     .addComponent(lblDestinatario))
                 .addGap(18, 18, 18)
-                .addComponent(jMessageScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE))
+                .addComponent(jMessageScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -232,17 +231,14 @@ public class Chat extends JFrame implements ServerEvents{
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jUserScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnRecarregar))
+                .addComponent(jUserScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(paneBottomArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(paneMensagemArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(paneMensagemArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(20, 20, 20))))
             .addComponent(paneTopArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
@@ -250,16 +246,12 @@ public class Chat extends JFrame implements ServerEvents{
             .addGroup(layout.createSequentialGroup()
                 .addComponent(paneTopArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jUserScrollPane)
-                            .addGap(0, 0, 0)
-                            .addComponent(btnRecarregar))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(344, 344, 344)
-                            .addComponent(paneBottomArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(0, 0, Short.MAX_VALUE)))
-                    .addComponent(paneMensagemArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(paneMensagemArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(paneBottomArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jUserScrollPane))
+                .addGap(0, 0, 0))
         );
 
         pack();
@@ -275,9 +267,10 @@ public class Chat extends JFrame implements ServerEvents{
 		}
 	}// GEN-LAST:event_btSairActionPerformed
 
-	private void aoSelecionarUmUsuario(MouseEvent evt) {// GEN-FIRST:event_jUserListMouseClicked
+	private void jUserListMouseClicked(MouseEvent evt) {// GEN-FIRST:event_jUserListMouseClicked
 		if (evt.getClickCount() > 1) {
-			String login = jUserList.getSelectedValue();
+			String userEscolhido = jUserList.getSelectedValue();
+			userEscolhido = removeNotificadorDeUsuarioSelecionado(userEscolhido);
 			// MessagePane messagePane = new MessagePane(client, login)
 			// JFrame f = new JFrame("Message: " + login);
 			// f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -286,13 +279,9 @@ public class Chat extends JFrame implements ServerEvents{
 			// f.setVisible(true);
 			this.paneMensagemArea.setVisible(true);
 			this.paneMensagemArea.setEnabled(true);
-			this.lblDestinatario.setText(login);
+			this.lblDestinatario.setText(userEscolhido);
 		}
 	}// GEN-LAST:event_jUserListMouseClicked
-
-	private void btnRecarregarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnRecarregarActionPerformed
-		this.preencheUserList(serverCommunication);
-	}// GEN-LAST:event_btnRecarregarActionPerformed
 
 	private void btEnviarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btEnviarActionPerformed
 		try {
@@ -329,6 +318,14 @@ public class Chat extends JFrame implements ServerEvents{
 	public void setTxtMensagem(JTextField txtMensagem) {
 		this.txtMensagem = txtMensagem;
 	}
+	
+	public ServerCommunication getServerCommunication() {
+		return serverCommunication;
+	}
+	
+	public void setServerCommunication(ServerCommunication serverCommunication) {
+		this.serverCommunication = serverCommunication;
+	}
 
 	public static void main(String args[]) {
 		/* Set the Nimbus look and feel */
@@ -360,12 +357,7 @@ public class Chat extends JFrame implements ServerEvents{
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {
-					// TODO REMOVER DEPOIS!
-					new Chat(null).setVisible(true);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				new Chat().setVisible(true);
 			}
 		});
 	}
@@ -373,7 +365,6 @@ public class Chat extends JFrame implements ServerEvents{
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btEnviar;
     private javax.swing.JButton btSair;
-    private javax.swing.JButton btnRecarregar;
     private javax.swing.JScrollPane jMessageScrollPane;
     private javax.swing.JList<String> jMessagesList;
     private javax.swing.JList<String> jUserList;
@@ -395,14 +386,67 @@ public class Chat extends JFrame implements ServerEvents{
 
 	@Override
 	public void offlineUser(String usuario) {
-		listUserModule.removeElement(usuario);
+		boolean elementoFoiRemovido = listUserModule.removeElement(usuario);
+		if (!elementoFoiRemovido) {
+			listUserModule.removeElement(usuario + CARACTER_NOTIFICADOR);
+		}
+	}
+
+	@Override
+	public void messageReceved(String usuario, String messagen) {
+		System.out.println("Recebi uma mensagem do Usuário: " + usuario + "\nMensagem: " + messagen);
+		notificaClienteDeMensagemDeUsuario(usuario);
 	}
 	
-	public ServerCommunication getServerCommunication() {
-		return serverCommunication;
+	@Override
+	public void messageSent(String usuario, String messagen) {
+		// validar se a mensagem foi recebida com sucesso
+		// se for, (criar um método do servidor que retorne a mensagem enviada) e a partir dai, inserir a mensagem na tela
+		// 
+		
 	}
 	
-	public void setServerCommunication(ServerCommunication serverCommunication) {
-		this.serverCommunication = serverCommunication;
+	/**
+	 * Retorna o index do usuário da lista de UserList.<p>
+	 * 
+	 * Esté método pode ser útil quando você deseja manipular algum elementro da lista, mas precisa saber o ID do mesmo primeiro.
+	 *
+	 * @param usuario - O usuário no qual você deseja saber o ID.
+	 * @return the int - Se Retornado -1. O Usuário não foi encontrado, caso contrário retornará o valor do index do mesmo.
+	 */
+	public int retornaUserIndexNaListaDeUsuarios(String usuario) {
+		for (int i = 0; i < listUserModule.getSize(); i++) {
+			if (isElementoSelecionadoUsuarioEspecificado(usuario, i)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	private boolean isElementoSelecionadoUsuarioEspecificado(String usuario, int i) {
+		return removeNotificacaoNomeUsuario(listUserModule.getElementAt(i)).equals(usuario);
+	}
+	
+	// FIXME Assuntos referentes a destinatário devem seguir para uma outra classe
+	private void notificaClienteDeMensagemDeUsuario(String usuario) {
+		int indexElemento = retornaUserIndexNaListaDeUsuarios(usuario);
+		if ((indexElemento != -1) && !getLblDestinatario().getText().equals(usuario)) {
+			listUserModule.set(indexElemento, usuario + CARACTER_NOTIFICADOR);
+		}
+	}
+	
+	private String removeNotificadorDeUsuarioSelecionado(String userEscolhido) {
+		if (userEscolhido.contains(CARACTER_NOTIFICADOR)) {
+			userEscolhido = removeNotificacaoNomeUsuario(userEscolhido);
+//			int userIndex = retornaUserIndexNaListaDeUsuarios(userEscolhido);
+			//listUserModule.set(userIndex, userEscolhido);
+			// Atualiza na lista. Removendo o marcador do nome do Usuário selecionado
+			listUserModule.set(jUserList.getSelectedIndex(), userEscolhido);
+		}
+		return userEscolhido;
+	}
+	
+	private String removeNotificacaoNomeUsuario(String usuario) {
+		return usuario.replace(CARACTER_NOTIFICADOR, "");
 	}
 }

@@ -1,8 +1,10 @@
-package br.unip.chatclient.model;
+package br.unip.chatclient.model.server;
 
 import java.io.IOException;
 
 import org.apache.commons.lang3.StringUtils;
+
+import br.unip.chatclient.controler.ServerListener;
 
 /**
  *
@@ -69,7 +71,7 @@ public final class ServerCommunication {
 
 	public void doMensagem(String destinatario, String mensagem) throws IOException {
 		this.validaComunicacaoComServidor();
-		final String comandoMensagem = "msg";
+		final String comandoMensagem = "sendTo";
 		String comando = String.valueOf(comandoMensagem + " " + destinatario + " " + mensagem + "\n");
 		enviaComandoParaServer(comando);
 		// Desativado. A Thread que está escutando o servidor que deve cuidar da resposta do mesmo

@@ -5,7 +5,7 @@
  */
 package br.unip.chatclient.view;
 
-import br.unip.chatclient.model.ServerCommunication;
+import br.unip.chatclient.model.server.ServerCommunication;
 import br.unip.chatclient.util.notifier.UserMessageNotifier;
 import java.io.IOException;
 

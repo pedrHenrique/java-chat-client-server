@@ -2,8 +2,8 @@ package br.unip.chatclient.controler;
 
 import java.io.IOException;
 
-import br.unip.chatclient.model.ServerCommunication;
-import br.unip.chatclient.model.ServerConnection;
+import br.unip.chatclient.model.server.ServerCommunication;
+import br.unip.chatclient.model.server.ServerConnection;
 import br.unip.chatclient.util.notifier.UserMessageNotifier;
 import br.unip.chatclient.view.Login;
 
