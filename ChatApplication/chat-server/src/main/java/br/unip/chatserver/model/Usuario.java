@@ -60,6 +60,7 @@ public class Usuario {
 		return result;
 	}
 
+	// TODO - Quando os ID's estiverem presentes no projeto, acredito que seria melhor mudar o equals/hashcode para o ID.
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -81,10 +82,14 @@ public class Usuario {
 		}
 		return true;
 	}
+	
+	public Usuario safeUserToString() {
+		return new Usuario(getId(), getLogin(), getPassword().replaceAll(".*", "#"));
+	}
 
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+		return ToStringBuilder.reflectionToString(safeUserToString(), ToStringStyle.JSON_STYLE);
 	}
 
 }

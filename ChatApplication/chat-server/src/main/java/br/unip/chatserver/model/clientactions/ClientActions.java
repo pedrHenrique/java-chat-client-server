@@ -41,7 +41,7 @@ public class ClientActions {
 	
 	public static Usuario showUser(ClientConnection client) {
 		if (client.isUserLogado()) {
-			notificaClientViaOutput(client, client.getUser().getLogin() + "\n");
+			notificaClientViaOutput(client, client.getUser() + "\n");
 			return client.getUser();
 		}
 		notificaClientViaOutput(client, "Falha. Você não está logado no momento!\n");

@@ -6,6 +6,7 @@
 package br.unip.chatclient.view;
 
 import br.unip.chatclient.controler.ServerListener;
+import br.unip.chatclient.model.Usuario;
 import br.unip.chatclient.model.server.ServerCommunication;
 import br.unip.chatclient.model.server.ServerEvents;
 import br.unip.chatclient.util.notifier.UserMessageNotifier;
@@ -18,8 +19,9 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JTextField;
+
+import org.json.JSONObject;
 
 public class Chat extends JFrame implements ServerEvents{
 
@@ -41,7 +43,7 @@ public class Chat extends JFrame implements ServerEvents{
 
 	private ServerCommunication serverCommunication;
 
-	private String usuario;
+	private Usuario usuario;
 	
 	// Para adicionar elementos na lista de mensagem. Nome destaVariavel.addElement(StringQualquer)
 	private DefaultListModel<String> listUserModule = new DefaultListModel<>();
@@ -64,13 +66,10 @@ public class Chat extends JFrame implements ServerEvents{
 	}
 	
 	private void realizaSolicitacoesInicias() throws IOException {
-		this.usuario = serverCommunication.retornaUsuario();
-		this.defineUsuarioNaTela();
+		JSONObject jo = new JSONObject(serverCommunication.retornaUsuario());
+		this.usuario = new Usuario(jo.getString("login")); //FIXME Instanciar o usuário utilizando o ID quando eles estiverem presentes no projeto.
+		this.lblNomeUsuario.setText(usuario.getLogin());
 		this.preencheUserList(serverCommunication);
-	}
-
-	private void defineUsuarioNaTela() {
-		this.lblNomeUsuario.setText(usuario);
 	}
 
 	private void preencheUserList(ServerCommunication serverCommunication) {
@@ -83,7 +82,6 @@ public class Chat extends JFrame implements ServerEvents{
 		}
 		List<String> listUsuariosOnline = Arrays.asList(userList.split(","));
 		for (String usuario : listUsuariosOnline) {
-			System.out.println("Estou conseguindo adicionar o Usuário? " + usuario);
 			listUserModule.addElement(usuario);
 		}
 	}
