@@ -54,7 +54,10 @@ public class ServerListener extends Thread {
                     } else if (cmd.equalsIgnoreCase("acceptFrom")) {
                     	String[] split = StringUtils.split(line, null, 3);
                     	chat.messageReceved(split[1], split[2]);
-                    } else {
+                    } else if (cmd.equalsIgnoreCase("sendTo")) {
+                    	String[] split = StringUtils.split(line, null, 4);
+                    	chat.messageSent(split[1], split[2], split[3]);
+					} else {
                     	System.out.println("Comando não reconhecido recebido!");
                     }
 //						  else if ("msg".equalsIgnoreCase(cmd)) {

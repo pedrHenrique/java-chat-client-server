@@ -8,6 +8,6 @@ public interface ServerEvents {
 	
 	public void messageReceved(String user, String message);
 	
-	public void messageSent(String user, String message);
+	public void messageSent(String user, String status, String message);
 
 }

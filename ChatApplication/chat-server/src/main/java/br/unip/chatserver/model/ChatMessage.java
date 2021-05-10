@@ -1,7 +1,5 @@
 package br.unip.chatserver.model;
 
-import static br.unip.chatserver.model.ServerCommands.ACCEPT_MESSAGE_FROM_COMMAND;
-
 import java.sql.Timestamp;
 
 import javax.validation.Valid;
@@ -11,8 +9,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class ChatMessage {
-
-	private final String rotuloPadraoMensagem;
 
 	@Valid
 	private Usuario remetente;
@@ -27,7 +23,6 @@ public class ChatMessage {
 	private String mensagem;
 
 	public ChatMessage(@Valid Usuario remetente, Timestamp data, String mensagem, @Valid Usuario destinatario) {
-		this.rotuloPadraoMensagem = "acceptFrom " + remetente.getLogin();
 		this.remetente = remetente;
 		this.data = data;
 		this.mensagem = mensagem;
@@ -35,7 +30,6 @@ public class ChatMessage {
 	}
 
 	public ChatMessage(@Valid Usuario remetente, String mensagem, @Valid Usuario destinatario) {
-		this.rotuloPadraoMensagem = ACCEPT_MESSAGE_FROM_COMMAND + " " + remetente.getLogin();
 		this.remetente = remetente;
 		this.data = new Timestamp(System.currentTimeMillis());// DateTime.now();
 		this.mensagem = mensagem;
@@ -133,10 +127,8 @@ public class ChatMessage {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE)
-				.append(rotuloPadraoMensagem + " " + 
-						data.toLocalDateTime().getHour() + ":" + data.toLocalDateTime().getMinute() + " - " +
-						remetente.getLogin() + ": " + mensagem + "\n")
-				.toString();
+				.append(data.toLocalDateTime().getHour() + ":" + data.toLocalDateTime().getMinute() + " - " +
+						remetente.getLogin() + ": " + mensagem + "\n").toString();
 	}
 
 }

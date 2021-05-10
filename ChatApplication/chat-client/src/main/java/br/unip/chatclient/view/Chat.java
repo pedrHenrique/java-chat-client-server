@@ -6,15 +6,20 @@
 package br.unip.chatclient.view;
 
 import br.unip.chatclient.controler.ServerListener;
+import br.unip.chatclient.model.ChatConversation;
 import br.unip.chatclient.model.Usuario;
 import br.unip.chatclient.model.server.ServerCommunication;
 import br.unip.chatclient.model.server.ServerEvents;
 import br.unip.chatclient.util.notifier.UserMessageNotifier;
 
+import static br.unip.chatclient.model.OpenChatConversation.returnOpenChat;
+
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
@@ -44,6 +49,10 @@ public class Chat extends JFrame implements ServerEvents{
 	private ServerCommunication serverCommunication;
 
 	private Usuario usuario;
+	
+	private List<ChatConversation> listOpenChats = new ArrayList<>();
+	
+	private ChatConversation activeChat;
 	
 	// Para adicionar elementos na lista de mensagem. Nome destaVariavel.addElement(StringQualquer)
 	private DefaultListModel<String> listUserModule = new DefaultListModel<>();
@@ -81,8 +90,9 @@ public class Chat extends JFrame implements ServerEvents{
 			return;
 		}
 		List<String> listUsuariosOnline = Arrays.asList(userList.split(","));
-		for (String usuario : listUsuariosOnline) {
-			listUserModule.addElement(usuario);
+		for (String usuarioOnline : listUsuariosOnline) {
+			listUserModule.addElement(usuarioOnline);
+			listOpenChats.add(new ChatConversation(usuario.getLogin(), usuarioOnline));
 		}
 	}
 
@@ -90,6 +100,7 @@ public class Chat extends JFrame implements ServerEvents{
 	// <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+
         jUserScrollPane = new javax.swing.JScrollPane();
         jUserList = new javax.swing.JList<>(listUserModule);
         paneBottomArea = new javax.swing.JPanel();
@@ -122,6 +133,7 @@ public class Chat extends JFrame implements ServerEvents{
 
         btEnviar.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         btEnviar.setText("Enviar");
+        btEnviar.setEnabled(false);
         btEnviar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btEnviarActionPerformed(evt);
@@ -259,7 +271,6 @@ public class Chat extends JFrame implements ServerEvents{
 			this.serverCommunication.doLogoff();
 			System.exit(0);
 		} catch (IOException ex) {
-			// Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
 			UserMessageNotifier.errorMessagePane(this, ex.getMessage());
 		}
 	}// GEN-LAST:event_btSairActionPerformed
@@ -268,17 +279,40 @@ public class Chat extends JFrame implements ServerEvents{
 		if (evt.getClickCount() > 1) {
 			String userEscolhido = jUserList.getSelectedValue();
 			userEscolhido = removeNotificadorDeUsuarioSelecionado(userEscolhido);
-			// MessagePane messagePane = new MessagePane(client, login)
-			// JFrame f = new JFrame("Message: " + login);
-			// f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			// f.setSize(500, 500);
-			// f.getContentPane().add(messagePane, BorderLayout.CENTER);
-			// f.setVisible(true);
+			//this.chat = new ChatConversation(usuario.getLogin(), userEscolhido);
 			this.paneMensagemArea.setVisible(true);
 			this.paneMensagemArea.setEnabled(true);
 			this.lblDestinatario.setText(userEscolhido);
+			this.txtMensagem.setText("");
+			this.listChatMessageModule.clear();
+			this.btEnviar.setEnabled(true);
+			List<String> conversa = retornaChatEntreUsuarios(usuario.getLogin(), userEscolhido);
+			adicionaAsMensagensNaTelaDeChat(conversa);
 		}
 	}// GEN-LAST:event_jUserListMouseClicked
+
+	private List<String> retornaChatEntreUsuarios(String usuarioUm, String usuarioDois) {
+		/** 
+		 * TODO -> No futuro será necessário fazer uma validação no banco.
+		 * Para verificar se os usuários já trocaram mensagens antes.
+		 * Se eles nunca tiverem trocado, um novo chat deverá ser aberto, 
+		 * agora se eles já tiverem trocado, o returnOpenChat deverá tentar abrir a conversa deles. 
+		 */
+//		try {
+//			this.chat = returnOpenChat(usuarioUm, usuarioDois);
+//		} catch (NoSuchElementException e) {
+//			// Se cairmos aqui, deu a se entender que os usuários nunca trocaram mensagem antes!
+//			this.chat = new ChatConversation(usuarioUm, usuarioDois);
+//		}
+		activeChat = returnOpenChat(usuarioUm, usuarioDois);
+		return activeChat.getConversa();
+	}
+	
+	public void adicionaAsMensagensNaTelaDeChat(List<String> messageList) {
+		for (String texto : messageList) {
+			listChatMessageModule.addElement(texto);
+		}
+	}
 
 	private void btEnviarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btEnviarActionPerformed
 		try {
@@ -288,7 +322,7 @@ public class Chat extends JFrame implements ServerEvents{
 			serverCommunication.doMensagem(destinatario, mensagem);
 			
 			// Adicionando a mensagem na tela
-			listChatMessageModule.addElement(mensagem);
+			//listChatMessageModule.addElement(mensagem);
 			
 			// Limpando o txt mensagem
 			txtMensagem.setText("");
@@ -379,6 +413,7 @@ public class Chat extends JFrame implements ServerEvents{
 	@Override
 	public void onlineUser(String usuario) {
 		listUserModule.addElement(usuario);
+		listOpenChats.add(new ChatConversation(this.usuario.getLogin(), usuario));
 	}
 
 	@Override
@@ -390,17 +425,32 @@ public class Chat extends JFrame implements ServerEvents{
 	}
 
 	@Override
-	public void messageReceved(String usuario, String messagen) {
-		System.out.println("Recebi uma mensagem do Usuário: " + usuario + "\nMensagem: " + messagen);
-		notificaClienteDeMensagemDeUsuario(usuario);
-	}
+	public void messageReceved(String usuario, String message) {
+		// Se o Chat já estiver aberto
+		if (getLblDestinatario().getText().replaceAll(CARACTER_NOTIFICADOR, "").equals(usuario)) {
+			activeChat.addMessage(message);
+			listChatMessageModule.addElement(message);
+		} else {
+			notificaClienteDeMensagemDeUsuario(usuario);
+			for (ChatConversation chatConversation : listOpenChats) {
+				if (chatConversation.getUsuarioDois().equals(usuario)) {
+					chatConversation.addMessage(message);
+					return;
+				}
+			}
+			System.err.println("Não achei ninguém para notificar :c.\n Pedro Corrige isso!!!");
+		}
+		}
 	
 	@Override
-	public void messageSent(String usuario, String messagen) {
-		// validar se a mensagem foi recebida com sucesso
-		// se for, (criar um método do servidor que retorne a mensagem enviada) e a partir dai, inserir a mensagem na tela
-		// 
-		
+	public void messageSent(String usuario, String status, String message) {
+		System.out.println("Enviei uma mensagem pro usuário " + usuario + " que obteve o status " + status + " enviando a mensagem " + message);
+		if (status.equals("sucesso")) {
+			activeChat.addMessage(message);
+			listChatMessageModule.addElement(message);
+			return;
+		}
+		UserMessageNotifier.infoMessagePane(this, message);
 	}
 	
 	/**

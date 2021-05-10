@@ -1,4 +1,4 @@
-package br.unip.chatserver.model;
+package br.unip.chatserver.constants;
 
 public final class ServerCommands {
 	

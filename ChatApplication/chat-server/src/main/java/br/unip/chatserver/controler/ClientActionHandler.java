@@ -1,5 +1,6 @@
 package br.unip.chatserver.controler;
 
+import static br.unip.chatserver.constants.ServerCommands.*;
 import static br.unip.chatserver.model.clientactions.ClientNotificationActions.notificaClientViaOutput;
 
 import java.io.IOException;
@@ -8,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import br.unip.chatserver.model.ClientConnection;
 import br.unip.chatserver.model.Server;
-import static br.unip.chatserver.model.ServerCommands.*;
 import br.unip.chatserver.model.clientactions.ClientActions;
 
 public final class ClientActionHandler extends ClientActions {

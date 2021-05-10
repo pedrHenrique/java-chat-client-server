@@ -4,7 +4,7 @@ import static br.unip.chatserver.model.clientactions.ClientNotificationActions.e
 import static br.unip.chatserver.model.clientactions.ClientNotificationActions.notificaClientViaOutput;
 import static br.unip.chatserver.model.clientactions.ClientNotificationActions.notificaTodosOsUsuarios;
 import static br.unip.chatserver.model.clientactions.ClientMessageActions.validaTokenMensagem;
-import static br.unip.chatserver.model.clientactions.ClientMessageActions.notificaUsuario;
+import static br.unip.chatserver.model.clientactions.ClientMessageActions.notificaUsuarios;
 import static br.unip.chatserver.model.clientactions.util.ActionsUtil.validaToken;
 import static br.unip.chatserver.model.clientactions.ClientLoginActions.usuarioValido;
 import static br.unip.chatserver.model.clientactions.ClientLoginActions.notificacoesPosClienteLogado;
@@ -81,10 +81,11 @@ public class ClientActions {
 		if (tokens != null) {
 			String destinatario = tokens[1];
 			String mensagem = tokens[2];
-			notificaUsuario(clientRemetente, destinatario, mensagem);
-		} else {
+			notificaUsuarios(clientRemetente, destinatario, mensagem);
+			notificaClientViaOutput(clientRemetente, "");
+			return;
+		} 
 			notificaClientViaOutput(clientRemetente, "Falha, a forma como você deseja enviar uma mensagem não pode ser aceita.\n");
-		}
 	}
 
 }
