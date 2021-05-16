@@ -5,8 +5,6 @@ import java.util.List;
 
 public class ChatConversation implements OpenChatConversation{
 	
-	// FIXME - No Futuro, trocar as String dos usuários pelos próprios objetos deles mesmos
-	
 	private final String usuarioUm; // Usuário principal do Chat
 	
 	private final String usuarioDois; 

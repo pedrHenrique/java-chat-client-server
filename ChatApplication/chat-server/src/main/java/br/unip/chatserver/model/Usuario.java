@@ -1,6 +1,7 @@
 package br.unip.chatserver.model;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 
@@ -9,23 +10,37 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class Usuario {
 	
+	//@NOTNULL - Quando os ID estiverem no esquema
 	@PositiveOrZero(message = "id não pode receber o valor '${validatedValue}'")
 	private Long id;
 	
-	@NotNull(message = "Campo login não pode ser nulo")
-	@Size(min = 3, max = 14, message = "Login '${validatedValue}' não pode ser aceito. Seu tamanho precisar estar entre {min} e {max}")
-	//TODO Informar um pattern para impedir a inclussão de espaços na senha.
+	@NotBlank(message = "Campo nome não pode ser vazio")
+	@Size(min = 3, max = 65, message = "Nome precisar estar entre {min} e {max} caracteres")
+	@Pattern(regexp = "[a-zA-ZáéíóúâêîôûãõÁÉÍÓÚÂÊÎÔÛÃÕ ]+", message = "Nome só deve conter letras!!")
+	private String nome;
+	
+	@NotBlank(message = "Campo login não pode ser vazio")
+	@Size(min = 3, max = 30, message = "Login precisar estar entre {min} e {max} caracteres")
+	@Pattern(regexp = "[\\w\\.\\-\\_!@#$%¨&*\\(\\)]+", message = "Esta forma de login não pode ser aceita.")
 	private String login;
 	
-	@NotNull(message = "Campo password não pode ser nulo")
-	@Size(min = 3, max = 26, message = "Senha '${validatedValue}' não pode ser aceita. Seu tamanho precisar estar entre {min} e {max}")
-	//TODO Informar um pattern para impedir a inclussão de espaços na senha.
+	@NotBlank(message = "Campo senha não pode ser vazio")
+	@Size(min = 3, max = 30, message = "Senha precisar estar entre {min} e {max} caracteres")
+	@Pattern(regexp = "[\\w\\.\\-\\_!@#$%¨&*\\(\\)]+", message = "Esta forma de senha não pode ser aceita.")
 	private String password;
 	
 	public Usuario(Long id, String login, String password) {
+			this.id = id;
+			this.nome = "Exemplo de como ficará o nome";
+			this.login = login.trim();
+			this.password = password.trim();
+	}
+	
+	public Usuario(Long id, String nome, String login, String password) {
 		this.id = id;
-		this.login = login;
-		this.password = password;
+		this.nome = nome.trim();
+		this.login = login.trim();
+		this.password = password.trim();
 	}
 
 	public Long getId() {
@@ -34,6 +49,14 @@ public class Usuario {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	public String getNome() {
+		return nome;
+	}
+	
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
 	public String getLogin() {
@@ -84,7 +107,7 @@ public class Usuario {
 	}
 	
 	public Usuario safeUserToString() {
-		return new Usuario(getId(), getLogin(), getPassword().replaceAll(".*", "#"));
+		return new Usuario(getId(), getNome(), getLogin(), getPassword().replaceAll(".*", "#"));
 	}
 
 	@Override

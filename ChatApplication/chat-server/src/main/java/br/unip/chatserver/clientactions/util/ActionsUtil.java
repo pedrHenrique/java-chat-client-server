@@ -1,4 +1,4 @@
-package br.unip.chatserver.model.clientactions.util;
+package br.unip.chatserver.clientactions.util;
 
 import org.apache.commons.lang3.StringUtils;
 

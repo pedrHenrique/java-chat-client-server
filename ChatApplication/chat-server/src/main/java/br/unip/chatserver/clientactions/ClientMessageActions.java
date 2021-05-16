@@ -1,12 +1,12 @@
-package br.unip.chatserver.model.clientactions;
+package br.unip.chatserver.clientactions;
 
+import static br.unip.chatserver.clientactions.ClientNotificationActions.notificaClientViaOutput;
+import static br.unip.chatserver.clientactions.util.ActionsUtil.retornaClienteComUsuarioInformado;
+import static br.unip.chatserver.clientactions.util.ActionsUtil.validaToken;
 import static br.unip.chatserver.constants.ServerCommands.ACCEPT_MESSAGE_FROM_COMMAND;
 import static br.unip.chatserver.constants.ServerCommands.SEND_MESSAGE_TO_COMMAND;
 import static br.unip.chatserver.constants.ServerResponse.FAIL;
 import static br.unip.chatserver.constants.ServerResponse.OK;
-import static br.unip.chatserver.model.clientactions.ClientNotificationActions.notificaClientViaOutput;
-import static br.unip.chatserver.model.clientactions.util.ActionsUtil.validaToken;
-import static br.unip.chatserver.model.clientactions.util.ActionsUtil.retornaClienteComUsuarioInformado;
 
 import org.apache.commons.lang3.StringUtils;
 

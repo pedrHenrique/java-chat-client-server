@@ -1,19 +1,21 @@
-package br.unip.chatserver.model.clientactions;
+package br.unip.chatserver.clientactions;
 
-import static br.unip.chatserver.model.clientactions.ClientNotificationActions.exibeUsuariosOnlineParaCliente;
-import static br.unip.chatserver.model.clientactions.ClientNotificationActions.notificaClientViaOutput;
-import static br.unip.chatserver.model.clientactions.ClientNotificationActions.notificaTodosOsUsuarios;
-import static br.unip.chatserver.model.clientactions.ClientMessageActions.validaTokenMensagem;
-import static br.unip.chatserver.model.clientactions.ClientMessageActions.notificaUsuarios;
-import static br.unip.chatserver.model.clientactions.util.ActionsUtil.validaToken;
-import static br.unip.chatserver.model.clientactions.ClientLoginActions.usuarioValido;
-import static br.unip.chatserver.model.clientactions.ClientLoginActions.notificacoesPosClienteLogado;
+import static br.unip.chatserver.clientactions.ClientLoginActions.notificacoesPosClienteLogado;
+import static br.unip.chatserver.clientactions.ClientMessageActions.notificaUsuarios;
+import static br.unip.chatserver.clientactions.ClientMessageActions.validaTokenMensagem;
+import static br.unip.chatserver.clientactions.ClientNotificationActions.exibeUsuariosOnlineParaCliente;
+import static br.unip.chatserver.clientactions.ClientNotificationActions.notificaClientViaOutput;
+import static br.unip.chatserver.clientactions.ClientNotificationActions.notificaTodosOsUsuarios;
+import static br.unip.chatserver.clientactions.util.ActionsUtil.validaToken;
 
 import java.io.IOException;
+
+import javax.validation.ConstraintViolationException;
 
 import br.unip.chatserver.model.ClientConnection;
 import br.unip.chatserver.model.Server;
 import br.unip.chatserver.model.Usuario;
+import br.unip.chatserver.model.validation.ValidatingBean;
 
 public class ClientActions {
 
@@ -59,12 +61,13 @@ public class ClientActions {
 			String login = tokens[1];
 			String senha = tokens[2];			
 			Usuario usuario = new Usuario(null, login, senha);
-			if (usuarioValido(usuario)) {
+			try {
+				ValidatingBean.validaObject((Object) usuario);
 				client.setUser(usuario);
 				notificacoesPosClienteLogado(client, usuario);
-			} else {
+			} catch (ConstraintViolationException e) {
 				Server.notificaNoConsoleDoServidor("Cliente: " + client.getClientSocket() + " teve uma tentativa de login falha!");
-				notificaClientViaOutput(client, "Usuário ou senha informados não correspondem!\n");
+				notificaClientViaOutput(client, e.getMessage());
 			}
 		} else {
 			notificaClientViaOutput(client, "Ops, a forma como a senha ou o login foram informados não pode ser aceita.\n");
