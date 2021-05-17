@@ -25,7 +25,6 @@ import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-
 import org.json.JSONObject;
 
 public class Chat extends JFrame implements ServerEvents{
@@ -37,7 +36,7 @@ public class Chat extends JFrame implements ServerEvents{
 	 * 
 	 * Sempre que um usuário logar, ele será redirecionado a esse tela de Chat. A
 	 * tela de chat atualmente consegue pegar a lista de usuários logados NO MOMENTO
-	 * QUE O USUÁRIO ESPECÍFICO ENTROU NESTA TELA.
+	 * QUE O USU�?RIO ESPEC�?FICO ENTROU NESTA TELA.
 	 * 
 	 * Ou seja, se um usuário novo entrar ou sair, a lista não vai se atualizar
 	 * automaticamente... Ainda não.

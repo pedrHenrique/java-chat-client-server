@@ -5,7 +5,11 @@
  */
 package br.unip.chatclient.view;
 
+import static br.unip.chatclient.DAO.ClienteDAO.insert;
+import static br.unip.chatclient.DAO.ClienteDAO.buscaLogin;
+import br.unip.chatclient.model.Cliente;
 import br.unip.chatclient.model.server.ServerCommunication;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -40,7 +44,6 @@ public class Cadastro extends javax.swing.JFrame {
         lbl_nome = new javax.swing.JLabel();
         jT_Nome = new javax.swing.JTextField();
         lbl_data = new javax.swing.JLabel();
-        datadenasc = new javax.swing.JFormattedTextField();
         lbl_usuario = new javax.swing.JLabel();
         jT_Usuario = new javax.swing.JTextField();
         lbl_senha = new javax.swing.JLabel();
@@ -49,8 +52,10 @@ public class Cadastro extends javax.swing.JFrame {
         password_Confirmsenha = new javax.swing.JPasswordField();
         Bt_Confirmar = new javax.swing.JButton();
         Bt_Cancelar = new javax.swing.JButton();
+        jTidade = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
         setResizable(false);
 
         jP_Titulocad.setBackground(new java.awt.Color(0, 153, 51));
@@ -61,7 +66,7 @@ public class Cadastro extends javax.swing.JFrame {
 
         lbl_txt2.setFont(new java.awt.Font("Goudy Old Style", 1, 24)); // NOI18N
         lbl_txt2.setForeground(new java.awt.Color(255, 255, 255));
-        lbl_txt2.setText("√â r√°pido e muito f√°cil.");
+        lbl_txt2.setText("… r·pido e muito f·cil.");
 
         figura1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/unip/chatclient/view/img/novousuario.png"))); // NOI18N
 
@@ -72,19 +77,13 @@ public class Cadastro extends javax.swing.JFrame {
         jT_Nome.setToolTipText("Digite seu nome Completo!");
 
         lbl_data.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
-        lbl_data.setText("Data de Nascimento:");
-
-        datadenasc.setColumns(1);
-        datadenasc.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
-        datadenasc.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        datadenasc.setText("00/00/0000");
-        datadenasc.setToolTipText("Preencha a data com as \"/\".");
+        lbl_data.setText("Idade:");
 
         lbl_usuario.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
-        lbl_usuario.setText("Usu√°rio:");
+        lbl_usuario.setText("Usu·rio:");
 
         jT_Usuario.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jT_Usuario.setToolTipText("Esse nome ser√° utilizado para as proximas vezes que for entrer no sistema.");
+        jT_Usuario.setToolTipText("Esse nome ser· utilizado para as proximas vezes que for entrer no sistema.");
 
         lbl_senha.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         lbl_senha.setText("Digite sua Senha:");
@@ -115,7 +114,7 @@ public class Cadastro extends javax.swing.JFrame {
         Bt_Cancelar.setBackground(new java.awt.Color(255, 51, 0));
         Bt_Cancelar.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         Bt_Cancelar.setForeground(new java.awt.Color(255, 255, 255));
-        Bt_Cancelar.setText("Cancelar");
+        Bt_Cancelar.setText("Voltar");
         Bt_Cancelar.setContentAreaFilled(false);
         Bt_Cancelar.setOpaque(true);
         Bt_Cancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -129,38 +128,34 @@ public class Cadastro extends javax.swing.JFrame {
         jP_InfosLayout.setHorizontalGroup(
             jP_InfosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jP_InfosLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jP_InfosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jP_InfosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jP_InfosLayout.createSequentialGroup()
-                        .addComponent(lbl_nome)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jT_Nome))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jP_InfosLayout.createSequentialGroup()
-                        .addComponent(lbl_usuario)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jT_Usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, Short.MAX_VALUE)
-                        .addComponent(lbl_data)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(datadenasc, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jP_InfosLayout.createSequentialGroup()
-                        .addGroup(jP_InfosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jP_InfosLayout.createSequentialGroup()
+                        .addComponent(Bt_Confirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27)
+                        .addComponent(Bt_Cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jP_InfosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jP_InfosLayout.createSequentialGroup()
+                            .addComponent(lbl_nome)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jT_Nome))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jP_InfosLayout.createSequentialGroup()
+                            .addComponent(lbl_usuario)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jT_Usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(47, 47, 47)
+                            .addComponent(lbl_data)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jTidade, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jP_InfosLayout.createSequentialGroup()
+                            .addGroup(jP_InfosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(lbl_senha)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(password_Senha))
-                            .addGroup(jP_InfosLayout.createSequentialGroup()
-                                .addComponent(lbl_confirmsenha, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(password_Confirmsenha, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(176, 176, 176)))
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jP_InfosLayout.createSequentialGroup()
-                .addGap(38, 38, 38)
-                .addComponent(Bt_Confirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Bt_Cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(38, 38, 38))
+                                .addComponent(lbl_confirmsenha, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(jP_InfosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(password_Senha)
+                                .addComponent(password_Confirmsenha, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jP_InfosLayout.setVerticalGroup(
             jP_InfosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -172,23 +167,25 @@ public class Cadastro extends javax.swing.JFrame {
                 .addGap(29, 29, 29)
                 .addGroup(jP_InfosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_data)
-                    .addComponent(datadenasc, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_usuario)
-                    .addComponent(jT_Usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                    .addComponent(jT_Usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTidade, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addGroup(jP_InfosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_senha)
                     .addComponent(password_Senha, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jP_InfosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_confirmsenha)
-                    .addComponent(password_Confirmsenha, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(password_Confirmsenha, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(31, 31, 31)
                 .addGroup(jP_InfosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Bt_Confirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Bt_Cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(34, 34, 34))
         );
+
+        jTidade.getAccessibleContext().setAccessibleDescription("Coloque sua idade em numeros");
 
         javax.swing.GroupLayout jP_TitulocadLayout = new javax.swing.GroupLayout(jP_Titulocad);
         jP_Titulocad.setLayout(jP_TitulocadLayout);
@@ -234,20 +231,84 @@ public class Cadastro extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void Bt_CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Bt_CancelarActionPerformed    	
-    	this.setEnabled(false);
-    	this.setVisible(false);
+    private void Bt_CancelarActionPerformed(java.awt.event.ActionEvent evt) {                                                 
+    	this.dispose();
+        loginForm.setVisible(true);
     	this.loginForm.setCadastro(null);
-    }//GEN-LAST:event_Bt_CancelarActionPerformed
-
+    }
+    private boolean ValidaCampo(){
+        if (jT_Nome.getText().length() >4){
+            if (jT_Nome.getText().length() <=50){
+                if (jT_Usuario.getText().length() >0){
+                    if (jT_Usuario.getText().length() <= 50){
+                        if(Integer.parseInt(jTidade.getText()) >= 18){
+                            if (Validapass()){
+                                return true;
+                            }
+                        }else{
+                            JOptionPane.showMessageDialog(null, "… aconselhavÈl a idade acima de 18 anos de idade");
+                            return false;
+                        }
+                    }else{
+                        JOptionPane.showMessageDialog(null, "O campo Usuario n„o pode ter mais de 50 caracteres");
+                        return false;
+                    }
+                }else{
+                   JOptionPane.showMessageDialog(null, "O campo Usuario n„o pode ter menos de 4 caracteres"); 
+                    return false;
+                }
+             return false;   
+            }else{
+                JOptionPane.showMessageDialog(null, "O campo nome n„o pode ter mais de 50 caracteres");
+                return false;
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "O campo nome n„o pode ser nulo");
+            return false;
+        }
+    }
+     private Cliente getForm(){
+            Cliente cli = new Cliente();
+            cli.setLogin(jT_Usuario.getText());
+            cli.setNome(jT_Nome.getText());
+            cli.setPassword(String.valueOf(password_Senha.getPassword()));
+            return cli;  
+    }
+     private boolean Validapass(){
+        if (String.valueOf(password_Senha.getPassword()).length()> 0){
+            if(String.valueOf(password_Senha.getPassword()).length() <=50){
+                if(String.valueOf(password_Senha.getPassword()).equals(String.valueOf(password_Confirmsenha.getPassword()))){
+                    return true;
+                }else{
+                    JOptionPane.showMessageDialog(null, "As senhas n„o s„o iguais");
+                }
+                    
+            }else{
+                JOptionPane.showMessageDialog(null,"O campo senha n„o pode ter mais de 50 caracteres");
+                return false;
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "O campo senha n„o pode ser nulo");
+            return false;
+        }
+        return false;
+    }
     private void password_ConfirmsenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_password_ConfirmsenhaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_password_ConfirmsenhaActionPerformed
-
+ 
     private void Bt_ConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Bt_ConfirmarActionPerformed
-        // TODO add your handling code here:
+        if (ValidaCampo()){
+            if(buscaLogin(jT_Usuario.getText())){
+                JOptionPane.showMessageDialog(null, "Login de usuario j· existente","ALERT", JOptionPane.ERROR_MESSAGE);
+            }else{
+                insert(getForm());
+                JOptionPane.showMessageDialog(null, "Cadastro feito com sucesso");
+        }
+        }
     }//GEN-LAST:event_Bt_ConfirmarActionPerformed
 
     /**
@@ -288,12 +349,12 @@ public class Cadastro extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Bt_Cancelar;
     private javax.swing.JButton Bt_Confirmar;
-    private javax.swing.JFormattedTextField datadenasc;
     private javax.swing.JLabel figura1;
     private javax.swing.JPanel jP_Infos;
     private javax.swing.JPanel jP_Titulocad;
     private javax.swing.JTextField jT_Nome;
     private javax.swing.JTextField jT_Usuario;
+    private javax.swing.JTextField jTidade;
     private javax.swing.JLabel lbl_confirmsenha;
     private javax.swing.JLabel lbl_data;
     private javax.swing.JLabel lbl_nome;

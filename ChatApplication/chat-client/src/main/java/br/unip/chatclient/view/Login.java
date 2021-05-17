@@ -8,6 +8,8 @@ package br.unip.chatclient.view;
 import br.unip.chatclient.model.server.ServerCommunication;
 import br.unip.chatclient.util.notifier.UserMessageNotifier;
 import java.io.IOException;
+import static br.unip.chatclient.DAO.ClienteDAO.validaLogin;
+import javax.swing.JOptionPane;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -81,6 +83,8 @@ public class Login extends javax.swing.JFrame {
         setResizable(false);
 
         jP_Titulo.setBackground(new java.awt.Color(0, 153, 51));
+        jP_Titulo.setToolTipText("");
+        jP_Titulo.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jL_Titulo.setFont(new java.awt.Font("Goudy Old Style", 1, 36)); // NOI18N
         jL_Titulo.setForeground(new java.awt.Color(255, 255, 255));
@@ -104,7 +108,7 @@ public class Login extends javax.swing.JFrame {
         );
 
         jL_Instrucao.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
-        jL_Instrucao.setText("Insira o usu√°rio e a senha para entrar !");
+        jL_Instrucao.setText("Insira o usu·rio e a senha para entrar !");
 
         jP_User.setBackground(new java.awt.Color(255, 255, 255));
         jP_User.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -188,7 +192,7 @@ public class Login extends javax.swing.JFrame {
 
         Bt_NewConta.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         Bt_NewConta.setForeground(new java.awt.Color(51, 0, 204));
-        Bt_NewConta.setText("N√£o tem uma conta?");
+        Bt_NewConta.setText("N„o tem uma conta?");
         Bt_NewConta.setBorderPainted(false);
         Bt_NewConta.setContentAreaFilled(false);
         Bt_NewConta.addActionListener(new java.awt.event.ActionListener() {
@@ -249,6 +253,7 @@ public class Login extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jT_UserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jT_UserActionPerformed
@@ -256,9 +261,12 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_jT_UserActionPerformed
 
     private void Bt_EntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Bt_EntrarActionPerformed
-    	String usuario = this.jT_User.getText();
-        String senha = String.valueOf(this.jPassword_Senha.getPassword());
-        this.realizaLogin(usuario, senha);
+    if(validaLogin(jT_User.getText(), String.valueOf(jPassword_Senha.getPassword()))){
+        JOptionPane.showMessageDialog(null, "Sucesso");
+        this.realizaLogin(jT_User.getText(), String.valueOf(jPassword_Senha.getPassword()));
+    }else{
+        JOptionPane.showMessageDialog(null, "Login e/ou senha incorretos.");
+    }
     }//GEN-LAST:event_Bt_EntrarActionPerformed
 
     private void Bt_SairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Bt_SairActionPerformed
@@ -279,6 +287,7 @@ public class Login extends javax.swing.JFrame {
         	cadastro = new Cadastro(this, serverCommunicator);
             cadastro.setVisible(true);
         }
+        this.setVisible(false);
         cadastro.setVisible(true);
     }//GEN-LAST:event_Bt_NewContaActionPerformed
 
@@ -342,18 +351,18 @@ public class Login extends javax.swing.JFrame {
 	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Bt_Entrar;
-    private javax.swing.JButton Bt_Esqueci_Senha;
-    private javax.swing.JButton Bt_NewConta;
-    private javax.swing.JButton Bt_Sair;
-    private javax.swing.JLabel jL_IconSenha;
-    private javax.swing.JLabel jL_IconUser;
-    private javax.swing.JLabel jL_Instrucao;
-    private javax.swing.JLabel jL_Titulo;
-    private javax.swing.JPanel jP_Senha;
-    private javax.swing.JPanel jP_Titulo;
-    private javax.swing.JPanel jP_User;
-    private javax.swing.JPasswordField jPassword_Senha;
-    private javax.swing.JTextField jT_User;
+    javax.swing.JButton Bt_Entrar;
+    javax.swing.JButton Bt_Esqueci_Senha;
+    javax.swing.JButton Bt_NewConta;
+    javax.swing.JButton Bt_Sair;
+    javax.swing.JLabel jL_IconSenha;
+    javax.swing.JLabel jL_IconUser;
+    javax.swing.JLabel jL_Instrucao;
+    javax.swing.JLabel jL_Titulo;
+    javax.swing.JPanel jP_Senha;
+    javax.swing.JPanel jP_Titulo;
+    javax.swing.JPanel jP_User;
+    javax.swing.JPasswordField jPassword_Senha;
+    javax.swing.JTextField jT_User;
     // End of variables declaration//GEN-END:variables
 }
