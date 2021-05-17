@@ -13,7 +13,7 @@ public class ClienteDAO {
 
             try (
                 Connection conn = getConnection();
-                CallableStatement stmt = conn.prepareCall("{CALL SP_CLIENTE_IN(?,?,?)}");
+                CallableStatement stmt = conn.prepareCall("{CALL SP_USUARIO_IN(?,?,?)}");
                 )
             {
                 stmt.setString(1, c.getLogin());
@@ -33,7 +33,7 @@ public class ClienteDAO {
         try{
             Connection conn = getConnection();
             Statement sql = conn.createStatement();
-            ResultSet rs = sql.executeQuery("SELECT CLI_STR_LOGIN FROM CLIENTE WHERE CLI_STR_LOGIN ='" +c + "'");
+            ResultSet rs = sql.executeQuery("SELECT USU_STR_LOGIN FROM USUARIO WHERE USU_STR_LOGIN ='" +c + "'");
             if (rs.isBeforeFirst() || rs.isAfterLast()){
                 return true;
             }else{
@@ -48,7 +48,7 @@ public class ClienteDAO {
         try{
             Connection conn = getConnection();
             Statement sql = conn.createStatement();
-            ResultSet rs = sql.executeQuery("SELECT CLI_STR_LOGIN, CLI_STR_PASSWORD FROM CLIENTE WHERE CLI_STR_LOGIN ='" +c + "' and CLI_STR_PASSWORD = '"+d +"'" );
+            ResultSet rs = sql.executeQuery("SELECT USU_STR_LOGIN, USU_STR_PASSWORD FROM USUARIO WHERE USU_STR_LOGIN ='" +c + "' and USU_STR_PASSWORD = '"+d +"'" );
             if (rs.isBeforeFirst() || rs.isAfterLast()){
                 return true;
             }else{
