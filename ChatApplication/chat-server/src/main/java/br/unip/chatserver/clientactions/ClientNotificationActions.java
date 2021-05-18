@@ -1,4 +1,4 @@
-package br.unip.chatserver.model.clientactions;
+package br.unip.chatserver.clientactions;
 
 import java.io.IOException;
 
