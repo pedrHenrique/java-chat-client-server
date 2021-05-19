@@ -108,7 +108,7 @@ public class Login extends javax.swing.JFrame {
         );
 
         jL_Instrucao.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
-        jL_Instrucao.setText("Insira o usu·rio e a senha para entrar !");
+        jL_Instrucao.setText("Insira o usu√°rio e a senha para entrar !");
 
         jP_User.setBackground(new java.awt.Color(255, 255, 255));
         jP_User.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -192,7 +192,7 @@ public class Login extends javax.swing.JFrame {
 
         Bt_NewConta.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         Bt_NewConta.setForeground(new java.awt.Color(51, 0, 204));
-        Bt_NewConta.setText("N„o tem uma conta?");
+        Bt_NewConta.setText("N√£o tem uma conta?");
         Bt_NewConta.setBorderPainted(false);
         Bt_NewConta.setContentAreaFilled(false);
         Bt_NewConta.addActionListener(new java.awt.event.ActionListener() {

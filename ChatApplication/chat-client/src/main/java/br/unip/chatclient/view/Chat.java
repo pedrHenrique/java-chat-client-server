@@ -16,16 +16,20 @@ import static br.unip.chatclient.model.OpenChatConversation.returnOpenChat;
 
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
+import br.unip.chatclient.model.Mensagem;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import org.json.JSONObject;
+import static br.unip.chatclient.DAO.MensagemDAO.insereMensagem;
 
 public class Chat extends JFrame implements ServerEvents{
 
@@ -36,7 +40,7 @@ public class Chat extends JFrame implements ServerEvents{
 	 * 
 	 * Sempre que um usuário logar, ele será redirecionado a esse tela de Chat. A
 	 * tela de chat atualmente consegue pegar a lista de usuários logados NO MOMENTO
-	 * QUE O USU�?RIO ESPEC�?FICO ENTROU NESTA TELA.
+	 * QUE O USU�?RIO ESPEC�?FICO ENTROU NESTA TELA.
 	 * 
 	 * Ou seja, se um usuário novo entrar ou sair, a lista não vai se atualizar
 	 * automaticamente... Ainda não.
@@ -423,17 +427,27 @@ public class Chat extends JFrame implements ServerEvents{
 		}
 	}
 
+    
 	@Override
 	public void messageReceved(String usuario, String message) {
 		// Se o Chat já estiver aberto
-		if (getLblDestinatario().getText().replaceAll(CARACTER_NOTIFICADOR, "").equals(usuario)) {
+                String[] Mensagem = message.split(":");
+                Mensagem m = new Mensagem();
+                String a = Mensagem[2];
+                m.setRemetente(usuario);
+                m.setDestinatario(lblNomeUsuario.getText());
+                m.setMensagem(a);
+                
+                if (getLblDestinatario().getText().replaceAll(CARACTER_NOTIFICADOR, "").equals(usuario)) {
 			activeChat.addMessage(message);
 			listChatMessageModule.addElement(message);
+                        insereMensagem(m);
 		} else {
 			notificaClienteDeMensagemDeUsuario(usuario);
 			for (ChatConversation chatConversation : listOpenChats) {
 				if (chatConversation.getUsuarioDois().equals(usuario)) {
-					chatConversation.addMessage(message);
+                                    chatConversation.addMessage(message);
+				insereMensagem(m);
 					return;
 				}
 			}
