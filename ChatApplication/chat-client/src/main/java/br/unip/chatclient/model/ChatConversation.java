@@ -5,6 +5,9 @@ import java.util.List;
 
 public class ChatConversation implements OpenChatConversation{
 	
+	
+	// TODO Verificar se já existe um chat desse aberto, se já exister, retornar ele, ou criar um novo.
+	
 	private final String usuarioUm; // Usuário principal do Chat
 	
 	private final String usuarioDois; 

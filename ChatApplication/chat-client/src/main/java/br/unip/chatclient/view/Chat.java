@@ -7,6 +7,7 @@ package br.unip.chatclient.view;
 
 import br.unip.chatclient.controler.ServerListener;
 import br.unip.chatclient.model.ChatConversation;
+import br.unip.chatclient.model.FileObject;
 import br.unip.chatclient.model.Usuario;
 import br.unip.chatclient.model.server.ServerCommunication;
 import br.unip.chatclient.model.server.ServerEvents;
@@ -15,6 +16,10 @@ import br.unip.chatclient.util.notifier.UserMessageNotifier;
 import static br.unip.chatclient.model.OpenChatConversation.returnOpenChat;
 
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +27,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -36,7 +42,7 @@ public class Chat extends JFrame implements ServerEvents{
 	 * 
 	 * Sempre que um usuário logar, ele será redirecionado a esse tela de Chat. A
 	 * tela de chat atualmente consegue pegar a lista de usuários logados NO MOMENTO
-	 * QUE O USU�?RIO ESPEC�?FICO ENTROU NESTA TELA.
+	 * QUE O USU�?RIO ESPEC�?FICO ENTROU NESTA TELA.
 	 * 
 	 * Ou seja, se um usuário novo entrar ou sair, a lista não vai se atualizar
 	 * automaticamente... Ainda não.
@@ -105,6 +111,7 @@ public class Chat extends JFrame implements ServerEvents{
         paneBottomArea = new javax.swing.JPanel();
         txtMensagem = new javax.swing.JTextField();
         btEnviar = new javax.swing.JButton();
+        btnEnviarArquivo = new javax.swing.JButton();
         paneTopArea = new javax.swing.JPanel();
         btSair = new javax.swing.JButton();
         lblOla = new javax.swing.JLabel();
@@ -139,16 +146,25 @@ public class Chat extends JFrame implements ServerEvents{
             }
         });
 
+        btnEnviarArquivo.setText("Arquivo");
+        btnEnviarArquivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEnviarArquivoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout paneBottomAreaLayout = new javax.swing.GroupLayout(paneBottomArea);
         paneBottomArea.setLayout(paneBottomAreaLayout);
         paneBottomAreaLayout.setHorizontalGroup(
             paneBottomAreaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(paneBottomAreaLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(txtMensagem, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addComponent(txtMensagem, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btEnviar)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnEnviarArquivo)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         paneBottomAreaLayout.setVerticalGroup(
             paneBottomAreaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -156,7 +172,8 @@ public class Chat extends JFrame implements ServerEvents{
                 .addContainerGap()
                 .addGroup(paneBottomAreaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtMensagem, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btEnviar))
+                    .addComponent(btEnviar)
+                    .addComponent(btnEnviarArquivo))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
@@ -265,10 +282,27 @@ public class Chat extends JFrame implements ServerEvents{
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnEnviarArquivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarArquivoActionPerformed
+        JFileChooser chooser = new JFileChooser();
+        int intval = chooser.showOpenDialog(this);
+        try {
+        	if (intval == JFileChooser.APPROVE_OPTION){
+                    String destinatario = getLblDestinatario().getText();
+                    File f = chooser.getSelectedFile();
+                    String nomeArquivo = f.getName().replace(" ", "_");
+                    FileInputStream in = new FileInputStream(f);
+                    byte b[] = new byte[in.available()];
+                    in.read(b);
+                    FileObject file = new FileObject(usuario.getLogin(), destinatario, nomeArquivo, b);
+            }	
+		} catch (Exception e) {
+			UserMessageNotifier.errorMessagePane(this, "Não foi possível enviar o arquivo.\nMotivo: " + e.getMessage());
+		}
+    }//GEN-LAST:event_btnEnviarArquivoActionPerformed
+
 	private void btSairActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btSairActionPerformed
 		try {
 			this.serverCommunication.doLogoff();
-			System.exit(0);
 		} catch (IOException ex) {
 			UserMessageNotifier.errorMessagePane(this, ex.getMessage());
 		}
@@ -356,6 +390,14 @@ public class Chat extends JFrame implements ServerEvents{
 	public void setServerCommunication(ServerCommunication serverCommunication) {
 		this.serverCommunication = serverCommunication;
 	}
+	
+	public Usuario getUsuario() {
+		return usuario;
+	}
+	
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
 
 	public static void main(String args[]) {
 		/* Set the Nimbus look and feel */
@@ -395,6 +437,7 @@ public class Chat extends JFrame implements ServerEvents{
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btEnviar;
     private javax.swing.JButton btSair;
+    private javax.swing.JButton btnEnviarArquivo;
     private javax.swing.JScrollPane jMessageScrollPane;
     private javax.swing.JList<String> jMessagesList;
     private javax.swing.JList<String> jUserList;
@@ -495,4 +538,5 @@ public class Chat extends JFrame implements ServerEvents{
 	private String removeNotificacaoNomeUsuario(String usuario) {
 		return usuario.replace(CARACTER_NOTIFICADOR, "");
 	}
+
 }

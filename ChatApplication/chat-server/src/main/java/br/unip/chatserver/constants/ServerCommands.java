@@ -16,6 +16,10 @@ public final class ServerCommands {
 	
 	public static final String SHOW_ONLINE_USER_LIST_COMMAND = "userlist";
 	
+	public static final String ACCEPT_FILE_FROM_COMMAND = "fileAcceptFrom";
+	
+	public static final String SEND_FILE_TO_COMMAND = "sendFileTo";
+	
 	/** Comando necessário para enviar algum comando ou notificação pelo chat. **/
 	public static final String ENTER_COMMAND = "\n";
 	

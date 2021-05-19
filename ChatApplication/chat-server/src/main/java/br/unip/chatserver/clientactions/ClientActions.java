@@ -12,6 +12,7 @@ import java.io.IOException;
 
 import javax.validation.ConstraintViolationException;
 
+import br.unip.chatserver.clientactions.util.ActionsUtil;
 import br.unip.chatserver.model.ClientConnection;
 import br.unip.chatserver.model.Server;
 import br.unip.chatserver.model.Usuario;
@@ -26,6 +27,7 @@ public class ClientActions {
 	public static void handleLogoff(ClientConnection client) {
 		if (client.isUserLogado()) {
 			notificaTodosOsUsuarios(client, "offline " + client.getUser().getLogin() + "\n");
+			notificaClientViaOutput(client, "logoff successo\n");
 		}
 		finalizaClientSocket(client);
 	}
@@ -89,6 +91,21 @@ public class ClientActions {
 			return;
 		} 
 			notificaClientViaOutput(clientRemetente, "Falha, a forma como você deseja enviar uma mensagem não pode ser aceita.\n");
+	}
+	
+	public static void handleFile(ClientConnection clientRemetente, String[] tokens) {
+		if (!clientRemetente.isUserLogado()) {
+			notificaClientViaOutput(clientRemetente, "Você precisa estar logado para enviar alguma mensagem.\n");
+			return;
+		}
+		String destinatario = tokens[1];
+		String nomeArquivo = tokens[2];
+		int bytecode = Integer.valueOf(tokens[3]);
+		System.out.println("nomeArquivo: " + nomeArquivo +
+						   "\nbytecode: " + bytecode);
+		
+		ClientConnection clientDestinatario = ActionsUtil.retornaClienteComUsuarioInformado(destinatario);
+//		clientDestinatario.getOutputStream().write(b);
 	}
 
 }

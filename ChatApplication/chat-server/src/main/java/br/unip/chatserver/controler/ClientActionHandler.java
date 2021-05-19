@@ -4,6 +4,7 @@ import static br.unip.chatserver.clientactions.ClientNotificationActions.notific
 import static br.unip.chatserver.constants.ServerCommands.*;
 
 import java.io.IOException;
+import java.net.SocketException;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,19 +20,23 @@ public final class ClientActionHandler extends ClientActions {
 		this.client = client;
 	}
 	
-	public void clientListener() {
+	public void clientListener() throws SocketException {
 		try {
-			String line = client.getBufferedReader().readLine();
+			//String line = client.getBufferedReader().readLine();
+			String line = (String) client.getObjectInputStream().readObject();//String.valueOf(client.getObjectInputStream().readLine());
+			//System.out.println(line);
 			String[] tokens = (line != null) ? StringUtils.split(line) : null;
 			if (tokens != null && tokens.length > 0) {
 				Server.notificaNoConsoleDoServidor(client.getClientSocket() + " enviou a requisição: " + line);
 				this.handleAction(tokens, line);				
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException | ClassNotFoundException e) {
+			Server.notificaNoConsoleDoServidor("Um erro fatal aconteceu com a conexão do cliente: " + client.toString() + "\nEncerrando a execução deste cliente.");
+			throw new SocketException();
 		}
 	}
 	
+	// TODO SWITCH CASE aqui
 	private void handleAction(String[] tokens, String line) {
 		String comando = tokens[0];
 		if (comando.equals(LOGOFF_COMMAND)) {
@@ -48,6 +53,8 @@ public final class ClientActionHandler extends ClientActions {
 			showUser(client);
 		} else if (comando.equalsIgnoreCase(SHOW_ONLINE_USER_LIST_COMMAND)) {
 			showOnlineUserList(client);
+		} else if (comando.equalsIgnoreCase(SEND_FILE_TO_COMMAND)) {
+			handleFile(client, tokens);
 		} else {
 			notificaClientViaOutput(client, "Comando " + comando + " não pode ser reconhecido.\n");
 		}

@@ -3,7 +3,9 @@ package br.unip.chatserver.model;
 import br.unip.chatserver.controler.ClientActionHandler;
 
 import java.io.*;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 import javax.validation.Valid;
 
@@ -14,25 +16,37 @@ public class ClientConnection extends Thread {
 
 	private final Socket clientSocket;
 
-	private OutputStream outputStream;
+//	private OutputStream outputStream;
 	
-	private InputStream inputStream;
+	private ObjectOutputStream objectOutputStream;
+	
+//	private InputStream inputStream;
+	
+	private ObjectInputStream objectInputStream;
 	
 	private BufferedReader bufferedReader;
 
 	public ClientConnection(Socket clientSocket) {
 		this.clientSocket = clientSocket;
-		this.inputStream = this.iniciaInputStream();
-		this.outputStream = this.iniciaClientOuputStream();
-		this.bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+//		this.inputStream = this.iniciaInputStream();
+//		this.outputStream = this.iniciaClientOuputStream();
+		this.objectInputStream = this.iniciaClientObjectInputStream();
+		this.objectOutputStream = this.iniciaClientObjectOuputStream();
+//		this.bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 	}	
 
 	@Override
 	public void run() {
 		ClientActionHandler clientActionHandler = new ClientActionHandler(this);
 		while (isClientConnected()) {
-			clientActionHandler.clientListener();
+			try {
+				clientActionHandler.clientListener();
+			} catch (SocketException e) {
+				Server.removeClientConnection(this);
+				break;
+			}
 		}
+		this.interrupt();
 	}		
 
 	private boolean isClientConnected() {
@@ -77,12 +91,20 @@ public class ClientConnection extends Thread {
 		this.user = user;
 	}
 	
-	public OutputStream getOutputStream() {
-		return outputStream;
+//	public OutputStream getOutputStream() {
+//		return objectOutputStream;
+//	}
+	
+	public ObjectOutputStream getObjectOutputStream() {
+		return objectOutputStream;
 	}
 	
-	public InputStream getInputStream() {
-		return inputStream;
+//	public InputStream getInputStream() {
+//		return inputStream;
+//	}
+	
+	public ObjectInputStream getObjectInputStream() {
+		return objectInputStream;
 	}
 	
 	public BufferedReader getBufferedReader() {
@@ -93,23 +115,41 @@ public class ClientConnection extends Thread {
 		return clientSocket;
 	}
 
-	private OutputStream iniciaClientOuputStream() {
+	private OutputStream iniciaClientOuputStream() { 
 		try {
 			return clientSocket.getOutputStream();
 		} catch (IOException e) {
-			System.err.print("Não foi possível iniciar o outputStream do " + this + ".\nMotivo: " + e.getStackTrace());
+			System.err.print("Não foi possível iniciar o outputStream do " + this + ".\nMotivo: " + e.getCause());
 		}
-		return outputStream;
+		return objectOutputStream;
 	}
 	
-	private InputStream iniciaInputStream() {
+	private ObjectOutputStream iniciaClientObjectOuputStream() {
 		try {
-			return clientSocket.getInputStream();
+			return new ObjectOutputStream(clientSocket.getOutputStream());
 		} catch (IOException e) {
-			System.err.print("Não foi possível iniciar o InputStream do " + this + ".\nMotivo: " + e.getStackTrace());
+			System.err.print("Não foi possível iniciar o ObjectOutputStream do " + this + ".\nMotivo: " + e.getCause());
 		}
-		return inputStream;
+		return objectOutputStream;
 	}
+	
+	private ObjectInputStream iniciaClientObjectInputStream() {
+		try {
+			return new ObjectInputStream(clientSocket.getInputStream());
+		} catch (IOException e) {
+			System.err.print("Não foi possível iniciar o ObjectInputStream do " + this + ".\nMotivo: " + e.getCause());
+		}
+		return objectInputStream;
+	}
+	
+//	private InputStream iniciaInputStream() {
+//		try {
+//			return clientSocket.getInputStream();
+//		} catch (IOException e) {
+//			System.err.print("Não foi possível iniciar o InputStream do " + this + ".\nMotivo: " + e.getCause());
+//		}
+//		return inputStream;
+//	}
 	
 	public boolean isUserLogado() {
 		return this.getUser() != null;

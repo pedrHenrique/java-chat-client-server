@@ -1,10 +1,12 @@
 package br.unip.chatclient.model.server;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 import org.apache.commons.lang3.StringUtils;
 
 import br.unip.chatclient.controler.ServerListener;
+import br.unip.chatclient.model.FileObject;
 
 /**
  *
@@ -60,13 +62,13 @@ public final class ServerCommunication {
 		this.validaComunicacaoComServidor();
 		final String comandoLogoff = "logoff\n";
 		enviaComandoParaServer(comandoLogoff);
-		String resposta = retornaRespostaServidor();
-		if (isRespostaEsperada(resposta)) {
-			connection.finalizaComunicacaoComServidor();
-			this.user = null;
-		} else {
-			throw new IOException(resposta);
-		}
+		//String resposta = retornaRespostaServidor();
+//		if (isRespostaEsperada(resposta)) {
+//			connection.finalizaComunicacaoComServidor();
+//			this.user = null;
+//		} else {
+//			throw new IOException(resposta);
+//		}
 	}
 
 	public void doMensagem(String destinatario, String mensagem) throws IOException {
@@ -74,22 +76,16 @@ public final class ServerCommunication {
 		final String comandoMensagem = "sendTo";
 		String comando = String.valueOf(comandoMensagem + " " + destinatario + " " + mensagem + "\n");
 		enviaComandoParaServer(comando);
-		// Desativado. A Thread que está escutando o servidor que deve cuidar da resposta do mesmo
-		
-		//String resposta = retornaRespostaServidor();
-		//if (resposta.contains(FALHA)) {
-		//	throw new IllegalArgumentException(resposta);
-		//}
 	}
 
-//	private void handleMessage(String[] tokensMsg) {
-//        String login = tokensMsg[1];
-//        String msgBody = tokensMsg[2];
-//
-//        for(MessageListener listener : messageListeners) {
-//            listener.onMessage(login, msgBody);
-//        }
-//    }
+	public void doFile(FileObject file) throws IOException {
+		try {
+			connection.getObjectOutputStream().writeObject(file);
+			connection.getObjectOutputStream().flush();
+		} catch (IOException e) {
+			throw new IOException("Não foi possível enviar o arquivo: " + file.getFileName() + "\nMotivo:" + e.getCause());
+		}
+    }
 
 	private boolean isRespostaEsperada(String resposta) {
 		return resposta.contains(SUCESSO) || resposta.isEmpty();
@@ -101,9 +97,10 @@ public final class ServerCommunication {
 			// O servidor nem sempre retorna alguma mensagem quando uma solicitação é feita.
 			// Se a reposta for nula, retorna um simples vázio para evitar um
 			// NullPointerException
-			String resposta = connection.getBufferedIn().readLine();
+//			String resposta = connection.getBufferedIn().readLine();
+			String resposta = (String) connection.getObjectInputStream().readObject();
 			return (resposta != null) ? resposta : "";
-		} catch (IOException e) {
+		} catch (IOException | ClassNotFoundException e) {
 			throw new IOException("Não foi possível ler a resposta do servidor!!\nMotivo: " + e.getCause());
 		}
 	}
@@ -111,16 +108,17 @@ public final class ServerCommunication {
 	// Enviando uma requisição ao servidor
 	private void enviaComandoParaServer(String comando) throws IOException {
 		try {
-			connection.getServerOut().write(comando.getBytes());
+//			connection.getServerOut().write(comando.getBytes());
+			connection.getObjectOutputStream().writeObject(comando); //remover todos os \n do comandos?? Gambiarra se pa
+			connection.getObjectOutputStream().flush(); // não tinha testado essa linha antes
 		} catch (Exception e) {
-			throw new IOException("Não foi possível enviar uma requisição do servidor!!\nMotivo: " + e.getCause());
+			throw new IOException("Não foi possível enviar uma requisição ao servidor!!\nMotivo: " + e.getCause());
 		}
 	}
 
 	private void validaComunicacaoComServidor() throws IOException {
 		if (!connection.isConexaoComServidorEstabelecida()) {
-			throw new IOException(
-					"Não foi possível realizar a solicitação para o Servidor. Você não está conectado no momento.\n");
+			throw new IOException("Não foi possível realizar a solicitação para o Servidor. Você não está conectado no momento.\n");
 		}
 	}
 
@@ -145,7 +143,7 @@ public final class ServerCommunication {
 		final String comandoLogoff = "userlist\n";
 		enviaComandoParaServer(comandoLogoff);
 		String resposta = retornaRespostaServidor();
-		if (resposta.equals("")) {
+		if (resposta.equals("") || resposta.equals("\n")) {
 			return StringUtils.EMPTY;
 		} else {
 			return resposta;

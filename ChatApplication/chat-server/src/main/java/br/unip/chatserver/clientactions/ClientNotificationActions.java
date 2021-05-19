@@ -60,7 +60,9 @@ public class ClientNotificationActions {
 	 */
 	public static void notificaClientViaOutput(ClientConnection client, String mensagem) {
 		try {
-			client.getOutputStream().write(mensagem.getBytes());
+//			client.getOutputStream().write(mensagem.getBytes());
+			client.getObjectOutputStream().writeObject(mensagem);
+			client.getObjectOutputStream().flush();
 		} catch (IOException e) {
 			System.err.print("Não foi possível notificar pelo output o client " + client + ".\nMotivo: " + e.getStackTrace());
 		}

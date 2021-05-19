@@ -42,7 +42,7 @@ public class ServerListener extends Thread {
 		String line;
 		System.out.println("Iniciando Listener");
 		try {
-			while ((line = connection.getBufferedIn().readLine()) != null) {
+			while ((line = (String) connection.getObjectInputStream().readObject()) != null) {
 				String[] tokens = StringUtils.split(line);
 				if (tokens != null && tokens.length > 0) {
 					System.out.println(line);
@@ -57,8 +57,12 @@ public class ServerListener extends Thread {
                     } else if (cmd.equalsIgnoreCase("sendTo")) {
                     	String[] split = StringUtils.split(line, null, 4);
                     	chat.messageSent(split[1], split[2], split[3]);
+					} else if (cmd.equalsIgnoreCase("logoff")) {
+						chat.getServerCommunication().getConnection().finalizaComunicacaoComServidor();
+						chat.setUsuario(null);
+						System.exit(0);
 					} else {
-                    	System.out.println("Comando não reconhecido recebido!");
+						System.out.println("Comando não reconhecido recebido!");
                     }
 //						  else if ("msg".equalsIgnoreCase(cmd)) {
 //                        String[] tokensMsg = StringUtils.split(line, null, 3);
@@ -66,8 +70,8 @@ public class ServerListener extends Thread {
 //                    }
 				}
 			}
-		} catch (IOException e) {
-			System.err.print("Uma das thread que ficam ouvindo o servidor acabaram falhando. Pedindo que ela rode novamente!\nMotivo da falha: " + e);
+		} catch (IOException | ClassNotFoundException e) {
+			System.err.print("Uma das thread que ficam ouvindo o servidor acabaram falhando.\nMotivo da falha: " + e.getLocalizedMessage());
 			this.interrupt();
 		}
 	}
