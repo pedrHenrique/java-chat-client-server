@@ -76,7 +76,6 @@ public class Login extends javax.swing.JFrame {
         Bt_Sair = new javax.swing.JButton();
         Bt_Entrar = new javax.swing.JButton();
         Bt_NewConta = new javax.swing.JButton();
-        Bt_Esqueci_Senha = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -201,12 +200,6 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        Bt_Esqueci_Senha.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        Bt_Esqueci_Senha.setForeground(new java.awt.Color(51, 0, 204));
-        Bt_Esqueci_Senha.setText("Esqueci a senha ?");
-        Bt_Esqueci_Senha.setBorderPainted(false);
-        Bt_Esqueci_Senha.setContentAreaFilled(false);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -226,8 +219,7 @@ public class Login extends javax.swing.JFrame {
                     .addComponent(Bt_Sair, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(Bt_Entrar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(Bt_Esqueci_Senha)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(Bt_NewConta)))
                 .addContainerGap())
         );
@@ -242,9 +234,7 @@ public class Login extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jP_Senha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Bt_NewConta)
-                    .addComponent(Bt_Esqueci_Senha))
+                .addComponent(Bt_NewConta)
                 .addGap(18, 18, 18)
                 .addComponent(Bt_Entrar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -352,7 +342,6 @@ public class Login extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     javax.swing.JButton Bt_Entrar;
-    javax.swing.JButton Bt_Esqueci_Senha;
     javax.swing.JButton Bt_NewConta;
     javax.swing.JButton Bt_Sair;
     javax.swing.JLabel jL_IconSenha;

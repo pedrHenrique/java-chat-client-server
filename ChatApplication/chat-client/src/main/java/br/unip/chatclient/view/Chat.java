@@ -174,10 +174,10 @@ public class Chat extends JFrame implements ServerEvents{
             }
         });
 
-        lblOla.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lblOla.setFont(new java.awt.Font("Goudy Old Style", 1, 18)); // NOI18N
         lblOla.setText("Olá ");
 
-        lblNomeUsuario.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lblNomeUsuario.setFont(new java.awt.Font("Goudy Old Style", 1, 18)); // NOI18N
 
         javax.swing.GroupLayout paneTopAreaLayout = new javax.swing.GroupLayout(paneTopArea);
         paneTopArea.setLayout(paneTopAreaLayout);
@@ -207,10 +207,10 @@ public class Chat extends JFrame implements ServerEvents{
 
         jMessageScrollPane.setViewportView(jMessagesList);
 
-        lblConversandoCom.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        lblConversandoCom.setFont(new java.awt.Font("Goudy Old Style", 1, 18)); // NOI18N
         lblConversandoCom.setText("Conversando com: ");
 
-        lblDestinatario.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lblDestinatario.setFont(new java.awt.Font("Goudy Old Style", 1, 18)); // NOI18N
 
         javax.swing.GroupLayout paneMensagemAreaLayout = new javax.swing.GroupLayout(paneMensagemArea);
         paneMensagemArea.setLayout(paneMensagemAreaLayout);
