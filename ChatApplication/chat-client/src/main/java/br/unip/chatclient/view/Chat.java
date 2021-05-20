@@ -16,17 +16,21 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
+import br.unip.chatclient.model.Mensagem;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import org.json.JSONObject;
+import static br.unip.chatclient.DAO.MensagemDAO.insereMensagem;
 
 import model.FileObjectData;
 
@@ -471,17 +475,27 @@ public class Chat extends JFrame implements ServerEvents{
 		}
 	}
 
+    
 	@Override
 	public void messageReceved(String usuario, String message) {
 		// Se o Chat já estiver aberto
-		if (getLblDestinatario().getText().replaceAll(CARACTER_NOTIFICADOR, "").equals(usuario)) {
+                String[] Mensagem = message.split(":");
+                Mensagem m = new Mensagem();
+                String a = Mensagem[2];
+                m.setRemetente(usuario);
+                m.setDestinatario(lblNomeUsuario.getText());
+                m.setMensagem(a);
+                
+                if (getLblDestinatario().getText().replaceAll(CARACTER_NOTIFICADOR, "").equals(usuario)) {
 			activeChat.addMessage(message);
 			listChatMessageModule.addElement(message);
+                        insereMensagem(m);
 		} else {
 			notificaClienteDeMensagemDeUsuario(usuario);
 			for (ChatConversation chatConversation : listOpenChats) {
 				if (chatConversation.getUsuarioDois().equals(usuario)) {
-					chatConversation.addMessage(message);
+                                    chatConversation.addMessage(message);
+				insereMensagem(m);
 					return;
 				}
 			}
