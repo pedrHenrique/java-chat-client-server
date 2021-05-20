@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.apache.commons.lang3.StringUtils;
 
 import br.unip.chatclient.model.server.ServerConnection;
+import br.unip.chatclient.util.notifier.UserMessageNotifier;
 import br.unip.chatclient.view.Chat;
 import model.FileObjectData;
 
@@ -79,9 +80,9 @@ public class ServerListener extends Thread {
 				}
 			}
 		} catch (IOException | ClassNotFoundException e) {
-			System.err.print("Uma das thread que ficam ouvindo o servidor acabaram falhando.\nMotivo da falha: "
-					+ e.getLocalizedMessage());
+			UserMessageNotifier.errorMessagePane(chat, "Uma das thread que ficam ouvindo o servidor acabaram falhando.\nO programa precisará ser encerrado!");
 			this.interrupt();
+			System.exit(1);
 		}
 	}
 }

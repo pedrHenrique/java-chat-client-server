@@ -530,6 +530,8 @@ public class Chat extends JFrame implements ServerEvents{
 	    	    FileOutputStream outputStream = new FileOutputStream(folder + file.getFileName());
 	    	    outputStream.write(file.getFile());
 	    	    outputStream.close();
+	        } else {
+	        	chooser.cancelSelection();
 	        }
 		}
 	}
