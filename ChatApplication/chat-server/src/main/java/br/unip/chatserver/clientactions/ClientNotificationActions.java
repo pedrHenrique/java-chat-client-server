@@ -2,8 +2,10 @@ package br.unip.chatserver.clientactions;
 
 import java.io.IOException;
 
+import br.unip.chatserver.clientactions.util.ActionsUtil;
 import br.unip.chatserver.model.ClientConnection;
 import br.unip.chatserver.model.Server;
+import model.FileObjectData;
 
 public class ClientNotificationActions {
 	
@@ -60,12 +62,24 @@ public class ClientNotificationActions {
 	 */
 	public static void notificaClientViaOutput(ClientConnection client, String mensagem) {
 		try {
-//			client.getOutputStream().write(mensagem.getBytes());
 			client.getObjectOutputStream().writeObject(mensagem);
 			client.getObjectOutputStream().flush();
 		} catch (IOException e) {
 			System.err.print("Não foi possível notificar pelo output o client " + client + ".\nMotivo: " + e.getStackTrace());
 		}
+	}
+	
+	public static void notificaClientViaOutputForFile(FileObjectData data) throws IOException{
+		ClientConnection clientDestinatario = ActionsUtil.retornaClienteComUsuarioInformado(data.getFileDestinatario());
+		if (clientDestinatario != null ) {
+			try {
+				clientDestinatario.getObjectOutputStream().writeObject(data);
+				clientDestinatario.getObjectOutputStream().flush();
+			} catch (IOException e) {
+				throw new IOException("Não foi possível notificar pelo output o client " + clientDestinatario + ".\nMotivo: " + e.getStackTrace());
+			}
+		}
+		throw new IOException("Não foi possível enviar o arquivo pro usuário " + data.getFileDestinatario() + "\nAparentemente o mesmo não está mais online.");
 	}
 	
 	/**

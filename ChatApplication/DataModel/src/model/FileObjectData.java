@@ -1,9 +1,9 @@
-package br.unip.chatclient.model;
+package model;
 
 import javax.swing.ImageIcon;
 import java.io.Serializable;
 
-public class FileObject implements Serializable {
+public class FileObjectData implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -21,18 +21,18 @@ public class FileObject implements Serializable {
 	
 	private ImageIcon image;
 	
-	public FileObject(String fileRemetente, String fileDestinatario, String fileName, byte[] file) {
+	public FileObjectData(String fileRemetente, String fileDestinatario, String fileName, byte[] file) {
 		this.fileRemetente = fileRemetente;
 		this.fileDestinatario = fileDestinatario;
 		this.fileName = fileName;
 		this.file = file;
 	}
 	
-	public FileObject(String comando) {
+	public FileObjectData(String comando) {
 		this.comando = comando;
 	}
 	
-	public FileObject(String fileRemetente, String fileDestinatario, String fileName, byte[] file, ImageIcon image) {
+	public FileObjectData(String fileRemetente, String fileDestinatario, String fileName, byte[] file, ImageIcon image) {
 		this.fileRemetente = fileRemetente;
 		this.fileDestinatario = fileDestinatario;
 		this.fileName = fileName;
@@ -93,3 +93,4 @@ public class FileObject implements Serializable {
 	}
     
 }
+

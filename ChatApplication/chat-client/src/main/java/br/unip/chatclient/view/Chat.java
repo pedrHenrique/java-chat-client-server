@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.unip.chatclient.view;
 
 import br.unip.chatclient.controler.ServerListener;
@@ -32,6 +27,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import org.json.JSONObject;
+
+import model.FileObjectData;
 
 public class Chat extends JFrame implements ServerEvents{
 
@@ -147,6 +144,7 @@ public class Chat extends JFrame implements ServerEvents{
         });
 
         btnEnviarArquivo.setText("Arquivo");
+        btnEnviarArquivo.setEnabled(false);
         btnEnviarArquivo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEnviarArquivoActionPerformed(evt);
@@ -287,13 +285,19 @@ public class Chat extends JFrame implements ServerEvents{
         int intval = chooser.showOpenDialog(this);
         try {
         	if (intval == JFileChooser.APPROVE_OPTION){
-                    String destinatario = getLblDestinatario().getText();
+                    //String destinatario = getLblDestinatario().getText(); TODO ME DESCOMENTA PFF
                     File f = chooser.getSelectedFile();
                     String nomeArquivo = f.getName().replace(" ", "_");
                     FileInputStream in = new FileInputStream(f);
                     byte b[] = new byte[in.available()];
                     in.read(b);
-                    FileObject file = new FileObject(usuario.getLogin(), destinatario, nomeArquivo, b);
+                    //FileObject file = new FileObject(usuario.getLogin(), "Teste", nomeArquivo, b);
+                    FileObjectData file2 = new FileObjectData(usuario.getLogin(), getLblDestinatario().getText(), nomeArquivo, b);
+//                    Data data = new Data();
+//                    data.setStatus(jComboBox1.getSelectedItem() + "");
+//                    data.setName(txtName.getText().trim());
+//                    data.setFile(b);
+                    serverCommunication.doFile(file2);
             }	
 		} catch (Exception e) {
 			UserMessageNotifier.errorMessagePane(this, "Não foi possível enviar o arquivo.\nMotivo: " + e.getMessage());
@@ -319,6 +323,7 @@ public class Chat extends JFrame implements ServerEvents{
 			this.txtMensagem.setText("");
 			this.listChatMessageModule.clear();
 			this.btEnviar.setEnabled(true);
+			this.btnEnviarArquivo.setEnabled(true);
 			List<String> conversa = retornaChatEntreUsuarios(usuario.getLogin(), userEscolhido);
 			adicionaAsMensagensNaTelaDeChat(conversa);
 		}
@@ -493,6 +498,26 @@ public class Chat extends JFrame implements ServerEvents{
 			return;
 		}
 		UserMessageNotifier.infoMessagePane(this, message);
+	}
+	
+	@Override
+	public void fileReceived(FileObjectData file) throws IOException {
+		System.out.println("Recebi o arquivo: " + file.getFileName() +
+				 "\nEnviado pelo " + file.getFileRemetente() + 
+				 "\nPara o usuário " + file.getFileDestinatario());
+		boolean showConfirmMessage = UserMessageNotifier.showConfirmMessage(this, "Você recebeu um arquivo de: " + file.getFileRemetente() +
+																			"\nVocê deseja baixar o arquivo: " + file.getFileName() + "?");
+		if (showConfirmMessage == true) {
+			JFileChooser chooser = new JFileChooser();
+	        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+	        int browse = chooser.showOpenDialog(this);
+	        if(browse == JFileChooser.APPROVE_OPTION){
+	            String folder = chooser.getSelectedFile().toString() +"\\";
+	    	    FileOutputStream outputStream = new FileOutputStream(folder + file.getFileName());
+	    	    outputStream.write(file.getFile());
+	    	    outputStream.close();
+	        }
+		}
 	}
 	
 	/**

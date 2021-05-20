@@ -1,12 +1,14 @@
-package br.unip.chatclient.model;
+package br.unip.chatserver.model;
 
 import javax.swing.ImageIcon;
 import java.io.Serializable;
 
 public class FileObject implements Serializable {
 	
+	// No Futuro, trocar as String pelos próprias classes dos usuários
+	
 	private static final long serialVersionUID = 1L;
-
+	
 	private String comando;
 	
 	private String fileRemetente;
@@ -26,10 +28,6 @@ public class FileObject implements Serializable {
 		this.fileDestinatario = fileDestinatario;
 		this.fileName = fileName;
 		this.file = file;
-	}
-	
-	public FileObject(String comando) {
-		this.comando = comando;
 	}
 	
 	public FileObject(String fileRemetente, String fileDestinatario, String fileName, byte[] file, ImageIcon image) {

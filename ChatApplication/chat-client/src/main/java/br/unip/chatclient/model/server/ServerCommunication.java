@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import br.unip.chatclient.controler.ServerListener;
 import br.unip.chatclient.model.FileObject;
+import model.FileObjectData;
 
 /**
  *
@@ -41,8 +42,9 @@ public final class ServerCommunication {
 	public void doLogin(String usuario, String senha) throws IOException, IllegalArgumentException {
 		this.validaComunicacaoComServidor();
 		final String comandoLogin = "login ";
-		String comando = comandoLogin + usuario + " " + senha + "\n";
-		enviaComandoParaServer(comando);
+		String comando = comandoLogin + usuario + " " + senha;
+		//FileObject fileObject = new FileObject(comando);
+		enviaComandoParaServer2(new FileObjectData(comando));
 		String resposta = retornaRespostaServidor();
 		if (!resposta.contains(SUCESSO)) {
 			throw new IllegalArgumentException(resposta);
@@ -50,7 +52,8 @@ public final class ServerCommunication {
 	}
 
 	public String retornaUsuario() throws IOException {
-		enviaComandoParaServer("user\n");
+		//enviaComandoParaServer("user\n");
+		enviaComandoParaServer2(new FileObjectData("user"));
 		String resposta = retornaRespostaServidor();
 		if (resposta.contains(FALHA)) {
 			throw new IOException(resposta);
@@ -60,8 +63,9 @@ public final class ServerCommunication {
 
 	public void doLogoff() throws IOException {
 		this.validaComunicacaoComServidor();
-		final String comandoLogoff = "logoff\n";
-		enviaComandoParaServer(comandoLogoff);
+		final String comandoLogoff = "logoff";
+//		enviaComandoParaServer(comandoLogoff);
+		enviaComandoParaServer2(new FileObjectData(comandoLogoff));
 		//String resposta = retornaRespostaServidor();
 //		if (isRespostaEsperada(resposta)) {
 //			connection.finalizaComunicacaoComServidor();
@@ -74,11 +78,11 @@ public final class ServerCommunication {
 	public void doMensagem(String destinatario, String mensagem) throws IOException {
 		this.validaComunicacaoComServidor();
 		final String comandoMensagem = "sendTo";
-		String comando = String.valueOf(comandoMensagem + " " + destinatario + " " + mensagem + "\n");
-		enviaComandoParaServer(comando);
+		String comando = String.valueOf(comandoMensagem + " " + destinatario + " " + mensagem);
+		enviaComandoParaServer2(new FileObjectData(comando));
 	}
 
-	public void doFile(FileObject file) throws IOException {
+	public void doFile(FileObjectData file) throws IOException {
 		try {
 			connection.getObjectOutputStream().writeObject(file);
 			connection.getObjectOutputStream().flush();
@@ -106,10 +110,19 @@ public final class ServerCommunication {
 	}
 
 	// Enviando uma requisição ao servidor
-	private void enviaComandoParaServer(String comando) throws IOException {
+//	private void enviaComandoParaServer(String comando) throws IOException {
+//		try {
+////			connection.getServerOut().write(comando.getBytes());
+//			connection.getObjectOutputStream().writeObject(comando); //remover todos os \n do comandos?? Gambiarra se pa
+//			connection.getObjectOutputStream().flush(); // não tinha testado essa linha antes
+//		} catch (Exception e) {
+//			throw new IOException("Não foi possível enviar uma requisição ao servidor!!\nMotivo: " + e.getCause());
+//		}
+//	}
+	
+	private void enviaComandoParaServer2(FileObjectData fileObject) throws IOException {
 		try {
-//			connection.getServerOut().write(comando.getBytes());
-			connection.getObjectOutputStream().writeObject(comando); //remover todos os \n do comandos?? Gambiarra se pa
+			connection.getObjectOutputStream().writeObject(fileObject); //remover todos os \n do comandos?? Gambiarra se pa
 			connection.getObjectOutputStream().flush(); // não tinha testado essa linha antes
 		} catch (Exception e) {
 			throw new IOException("Não foi possível enviar uma requisição ao servidor!!\nMotivo: " + e.getCause());
@@ -141,7 +154,7 @@ public final class ServerCommunication {
 	public String returnUserList() throws IOException, IllegalArgumentException {
 		this.validaComunicacaoComServidor();
 		final String comandoLogoff = "userlist\n";
-		enviaComandoParaServer(comandoLogoff);
+		enviaComandoParaServer2(new FileObjectData(comandoLogoff));
 		String resposta = retornaRespostaServidor();
 		if (resposta.equals("") || resposta.equals("\n")) {
 			return StringUtils.EMPTY;

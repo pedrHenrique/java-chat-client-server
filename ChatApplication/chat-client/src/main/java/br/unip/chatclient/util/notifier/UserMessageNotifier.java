@@ -32,6 +32,9 @@ public final class UserMessageNotifier {
 		JOptionPane.showMessageDialog(tela, mensagem, "Mensagem de erro", JOptionPane.INFORMATION_MESSAGE);
 	}
 	
-	// TODO Ver um pane que tentasse conectar no servidor, tendo em vista que o usuário possa não estar logado no servidor
+	public static boolean showConfirmMessage(Component tela, String mensagem) {
+		int dialogResult = JOptionPane.showConfirmDialog(tela, mensagem,"Warning", JOptionPane.YES_NO_OPTION);
+		return dialogResult == JOptionPane.YES_OPTION;
+	}
 	
 }
