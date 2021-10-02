@@ -251,13 +251,12 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_jT_UserActionPerformed
 
     private void Bt_EntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Bt_EntrarActionPerformed
-    // TODO Ativar estas linhas novamente quando a conexão com o banco for necessária
-    //if(validaLogin(jT_User.getText(), String.valueOf(jPassword_Senha.getPassword()))){
-        JOptionPane.showMessageDialog(null, "Sucesso");
+//    if(validaLogin(jT_User.getText(), String.valueOf(jPassword_Senha.getPassword()))){
+//        JOptionPane.showMessageDialog(null, "Sucesso");
         this.realizaLogin(jT_User.getText(), String.valueOf(jPassword_Senha.getPassword()));
-    //}else{
-    //    JOptionPane.showMessageDialog(null, "Login e/ou senha incorretos.");
-    //}
+//    }else{
+//        JOptionPane.showMessageDialog(null, "Login e/ou senha incorretos.");
+//    }
     }//GEN-LAST:event_Bt_EntrarActi	onPerformed
 
     private void Bt_SairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Bt_SairActionPerformed
